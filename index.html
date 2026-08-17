@@ -6,27 +6,22 @@
     <title>LeerDeutsch PRO</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #121212; --surface: #1e1e1e; --primary: #8b5cf6; --text: #e2e8f0; }
+        :root { --bg: #0f172a; --surface: #1e293b; --primary: #8b5cf6; --text: #f8fafc; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; }
-        
-        .top-bar { background: var(--surface); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 1000; }
+        .top-bar { background: var(--surface); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1000; }
         .menu-toggle { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; margin-right: 15px; }
-        
-        /* Menu Sidebar */
-        .sidebar { position: fixed; top: 0; left: -280px; width: 250px; height: 100%; background: var(--surface); z-index: 2000; transition: 0.3s; padding: 20px; }
+        .sidebar { position: fixed; top: 0; left: -280px; width: 250px; height: 100%; background: var(--surface); z-index: 2000; transition: 0.3s; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.5); }
         .sidebar.active { left: 0; }
-        .nav-link { display: block; padding: 15px; color: white; text-decoration: none; border-bottom: 1px solid #333; cursor: pointer; }
-
-        /* Page Content */
+        .nav-link { display: block; padding: 15px; color: white; text-decoration: none; border-bottom: 1px solid #334155; cursor: pointer; font-weight: 600; }
         .page { display: none; padding: 20px; }
         .page.active { display: block; }
-        .card { background: var(--surface); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .card { background: var(--surface); border-radius: 12px; padding: 25px; margin-bottom: 20px; border: 1px solid #334155; }
         h2 { color: var(--primary); margin-bottom: 15px; }
-        iframe { width: 100%; height: 500px; border: none; border-radius: 8px; background: white; }
+        .link-item { display: block; background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 10px; color: #38bdf8; text-decoration: none; font-weight: 600; }
+        .bio-text { color: #cbd5e1; line-height: 1.8; }
     </style>
 </head>
 <body>
-
     <div class="top-bar">
         <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
         <strong>LeerDeutsch PRO</strong>
@@ -40,41 +35,45 @@
         <div class="nav-link" onclick="toggleSidebar()">✕ Tutup</div>
     </div>
 
-    <!-- Page: Berita & Artikel -->
     <div id="berita" class="page active">
         <div class="card">
-            <h2>📰 Berita & Artikel</h2>
-            <iframe src="https://www.nachrichtenleicht.de/"></iframe>
+            <h2>📰 Berita & Artikel Pilihan</h2>
+            <a href="https://www.nachrichtenleicht.de/" target="_blank" class="link-item">📌 Nachrichtenleicht (Berita Mudah)</a>
+            <a href="https://learngerman.dw.com/de/overview" target="_blank" class="link-item">📌 DW Learn German</a>
+            <a href="https://www.tagesschau.de/" target="_blank" class="link-item">📌 Tagesschau (Berita Utama)</a>
         </div>
     </div>
 
-    <!-- Page: Kamus -->
     <div id="kamus" class="page">
         <div class="card">
             <h2>🔍 Kamus & Penerjemah</h2>
-            <input type="text" id="wordInput" placeholder="Ketik kata Jerman..." style="width:100%; padding:10px; border-radius:6px; margin-bottom:10px;">
-            <button onclick="terjemahkan()" style="width:100%; padding:10px; background:var(--primary); color:white; border:none; border-radius:6px;">Buka Google Translate</button>
+            <input type="text" id="wordInput" placeholder="Ketik kata Jerman..." style="width:100%; padding:12px; border-radius:6px; background:#0f172a; color:white; border:1px solid #334155;">
+            <button onclick="terjemahkan()" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:6px; margin-top:10px; font-weight:bold; cursor:pointer;">Buka Google Translate</button>
         </div>
     </div>
 
-    <!-- Page: Tentang -->
     <div id="tentang" class="page">
         <div class="card">
             <h2>👤 Tentang Pembuat</h2>
-            <p>Dibuat oleh <strong>Leer</strong> untuk mempermudah belajar bahasa Jerman dengan efisien.</p>
+            <div class="bio-text">
+                <p>Halo! Saya <strong>Leer</strong>, pembuat dari LeerDeutsch PRO. Website ini lahir dari ketertarikan saya yang mendalam pada bahasa Jerman dan keinginan kuat untuk memiliki pusat akses belajar yang bersih, cepat, dan fokus.</p>
+                <br>
+                <p>Sebagai seseorang yang juga sedang berjuang menguasai bahasa Jerman, saya menyadari betapa pentingnya akses ke sumber berita yang tepat dan alat bantu terjemahan yang instan. LeerDeutsch PRO adalah proyek mandiri yang saya bangun untuk mendokumentasikan proses belajar saya dan membagikannya kepada siapa saja yang memiliki tujuan serupa.</p>
+                <br>
+                <p>Visi saya adalah membangun ekosistem digital di mana setiap pembelajar bisa mendapatkan bahan bacaan berkualitas tinggi dan alat bantu belajar tanpa terdistraksi oleh iklan yang berlebihan. Terima kasih telah berkunjung, semoga portal ini membantu perjalanan Anda dalam menguasai bahasa Jerman!</p>
+            </div>
         </div>
     </div>
 
     <script>
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        function showPage(pageId) {
+        function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
+            document.getElementById(id).classList.add('active');
             toggleSidebar();
         }
         function terjemahkan() {
-            const val = document.getElementById('wordInput').value;
-            window.open('https://translate.google.com/?sl=de&tl=id&text=' + val, '_blank');
+            window.open('https://translate.google.com/?sl=de&tl=id&text=' + document.getElementById('wordInput').value, '_blank');
         }
     </script>
 </body>
