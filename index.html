@@ -3,100 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mein Deutsch Lernen - Media Belajar Jerman</title>
+    <title>Mein Deutschportal - Belajar Bahasa Jerman Profesional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
         }
         header {
-            background-color: #2c3e50;
-            color: white;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-bottom: 1px solid var(--border);
             text-align: center;
-            padding: 2rem 1rem;
+            padding: 3rem 1rem;
         }
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #60a5fa, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        header p { color: var(--text-muted); font-size: 1.1rem; }
+        
         nav {
             display: flex;
             justify-content: center;
-            background-color: #34495e;
-            padding: 0.8rem;
-            flex-wrap: wrap;
+            background-color: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem;
         }
         nav a {
-            color: white;
+            color: var(--text-muted);
             text-decoration: none;
-            margin: 5px 15px;
-            font-weight: bold;
+            margin: 0 20px;
+            font-weight: 600;
+            transition: color 0.3s;
         }
-        nav a:hover {
-            color: #3498db;
-        }
+        nav a:hover { color: #60a5fa; }
+
         .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         h2 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 5px;
+            color: #f1f5f9;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 8px;
         }
-        h3 {
-            color: #2980b9;
-            margin-top: 20px;
+        
+        /* Form & Dictionary Search */
+        .search-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
         }
         input[type="text"] {
-            width: 70%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            flex: 1;
+            padding: 12px 16px;
+            background-color: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
             font-size: 1rem;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
         }
         button {
-            padding: 10px 20px;
-            background-color: #3498db;
+            padding: 12px 24px;
+            background-color: var(--primary);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
-        button:hover {
-            background-color: #2980b9;
-        }
+        button:hover { background-color: var(--primary-dark); }
+        
         .result-box {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #ecf0f1;
-            border-left: 4px solid #3498db;
-            font-weight: bold;
-        }
-        .article-box {
-            background-color: #f9f9f9;
+            margin-top: 20px;
             padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            border: 1px solid #e1e8ed;
+            background-color: #0f172a;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            color: var(--text-muted);
         }
-        .deutsch-text {
-            font-style: italic;
-            color: #2c3e50;
-            margin-bottom: 8px;
+
+        /* Article styling */
+        .article-item {
+            background-color: #0f172a;
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
         }
-        .indo-text {
-            color: #555;
-        }
+        .article-item h3 { color: #38bdf8; font-size: 1.2rem; margin-bottom: 8px; }
+        .deutsch-text { font-style: italic; color: #e2e8f0; margin-bottom: 8px; }
+        .indo-text { color: var(--text-muted); font-size: 0.95rem; }
+
         footer {
             text-align: center;
-            padding: 1rem;
-            color: #7f8c8d;
+            padding: 2rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
             font-size: 0.9rem;
         }
     </style>
@@ -105,108 +146,104 @@
 
     <header>
         <h1>Mein Deutsch Lernportal</h1>
-        <p>Catatan, Mini Kamus, dan Artikel Belajar Bahasa Jerman (A1 - C2)</p>
+        <p>Pusat Belajar, Kamus Interaktif, & Artikel Bahasa Jerman Profesional</p>
     </header>
 
     <nav>
         <a href="#beranda">Beranda</a>
-        <a href="#terjemah">Mini Kamus</a>
+        <a href="#kamus">Kamus Online</a>
         <a href="#artikel">Artikel A1-C2</a>
     </nav>
 
-    <div class="container" id="beranda">
-        <h2>Willkommen! (Selamat Datang)</h2>
-        <p>Website ini adalah pusat catatan mandiri untuk mempelajari bahasa Jerman, lengkap dengan fitur terjemahan dan artikel latihan dari level dasar hingga mahir.</p>
-    </div>
-
-    <div class="container" id="terjemah">
-        <h2>Cari Terjemahan Kosakata</h2>
-        <p>Ketik kata dalam Bahasa Indonesia atau Jerman (contoh: <em>rumah</em>, <em>sekolah</em>, <em>haus</em>, <em>schule</em>):</p>
+    <div class="container">
         
-        <input type="text" id="wordInput" placeholder="Masukkan kata...">
-        <button onclick="cariTerjemahan()">Terjemahkan</button>
-        
-        <div class="result-box" id="resultOutput">
-            Hasil terjemahan akan muncul di sini...
-        </div>
-    </div>
-
-    <div class="container" id="artikel">
-        <h2>Artikel Latihan Bahasa Jerman (A1 - C2)</h2>
-        <p>Kumpulan teks bacaan lengkap dengan terjemahan bahasa Indonesia untuk mengasah pemahaman.</p>
-
-        <!-- A1 -->
-        <div class="article-box">
-            <h3>Level A1: Mein Alltag (Keseharianku)</h3>
-            <p class="deutsch-text"><strong>Deutsch:</strong> Ich heiße Bruno und komme aus Indonesien. Ich wohne in Bekasi. Jeden Tag stehe ich früh auf. Um sechs Uhr trinke ich eine Tasse Kaffee. Danach jogge ich im Park. Das macht Spaß und ist gesund. Um acht Uhr beginne ich zu arbeiten. Am Abend lerne ich Deutsch. Ich lese gerne Bücher und höre Musik. Um zehn Uhr schlafe ich ein.</p>
-            <p class="indo-text"><strong>Terjemahan:</strong> Nama saya Bruno dan saya berasal dari Indonesia. Saya tinggal di Bekasi. Setiap hari saya bangun pagi. Jam enam saya minum secangkir kopi. Setelah itu saya jogging di taman. Itu sangat menyenangkan dan sehat. Jam delapan saya mulai bekerja. Pada malam hari saya belajar bahasa Jerman. Saya suka membaca buku dan mendengarkan musik. Jam sepuluh saya tidur.</p>
+        <!-- Beranda -->
+        <div class="card" id="beranda">
+            <h2>Willkommen!</h2>
+            <p>Selamat datang di platform pembelajaran mandiri bahasa Jerman. Website ini dirancang bersih, modern, dan fungsional untuk mendukung perjalanan menguasai bahasa Jerman dari tingkat dasar hingga mahir.</p>
         </div>
 
-        <!-- A2 -->
-        <div class="article-box">
-            <h3>Level A2: Meine Reise nach Jakarta</h3>
-            <p class="deutsch-text"><strong>Deutsch:</strong> Letztes Jahr bin ich nach Jakarta gereist. Die Stadt ist sehr groß und lebendig. Am Morgen bin ich mit dem Zug gefahren. In Jakarta habe ich viele interessante Orte besucht. Ich habe auch traditionelles Essen probiert, wie zum Beispiel Soto Mie und Martabak. Die Menschen dort sind sehr freundlich. Am Abend bin ich müde, aber glücklich in mein Hotel zurückgekehrt. Diese Reise war ein wunderbares Erlebnis für mich.</p>
-            <p class="indo-text"><strong>Terjemahan:</strong> Tahun lalu saya pergi ke Jakarta. Kota ini sangat besar dan hidup. Pada pagi hari saya pergi dengan kereta. Di Jakarta saya mengunjungi banyak tempat menarik. Saya juga mencoba makanan tradisional, seperti Soto Mie dan Martabak. Orang-orang di sana sangat ramah. Pada malam hari saya kembali ke hotel dalam keadaan lelah namun bahagia. Perjalanan ini adalah pengalaman yang luar biasa bagi saya.</p>
+        <!-- Kamus Online -->
+        <div class="card" id="kamus">
+            <h2>Kamus Jerman - Indonesia</h2>
+            <p>Cari arti kata, definisi, dan contoh penggunaan kalimat dalam bahasa Jerman secara instan:</p>
+            
+            <div class="search-group">
+                <input type="text" id="wordInput" placeholder="Masukkan kata (contoh: Arbeit, Wasser, Haus)...">
+                <button onclick="cariKamusOnline()">Cari</button>
+            </div>
+            
+            <div class="result-box" id="resultOutput">
+                Hasil pencarian akan muncul di sini...
+            </div>
         </div>
 
-        <!-- B1 -->
-        <div class="article-box">
-            <h3>Level B1: Die Bedeutung des lebenslangen Lernens</h3>
-            <p class="deutsch-text"><strong>Deutsch:</strong> In der heutigen modernen Welt ist es sehr wichtig, niemals mit dem Lernen aufzuhören. Ob man eine neue Sprache wie Deutsch lernt oder technische Fähigkeiten verbessert, Bildung öffnet viele Türen. Als Logistik-Operator und Fahrer habe ich gelernt, dass Disziplin und Anpassungsfähigkeit der Schlüssel zum Erfolg sind. Durch Online-Portale und Sprachkurse kann man jeden Tag neue Dinge entdecken. Man muss nur motiviert bleiben und klare Ziele setzen.</p>
-            <p class="indo-text"><strong>Terjemahan:</strong> Di dunia modern saat ini, sangat penting untuk tidak pernah berhenti belajar. Entah seseorang sedang mempelajari bahasa baru seperti bahasa Jerman atau meningkatkan keterampilan teknis, pendidikan membuka banyak pintu. Sebagai operator logistik dan pengemudi, saya telah belajar bahwa disiplin dan kemampuan beradaptasi adalah kunci kesuksesan. Melalui portal online dan kursus bahasa, seseorang dapat menemukan hal-hal baru setiap hari. Kita hanya perlu tetap termotivasi dan menetapkan tujuan yang jelas.</p>
+        <!-- Artikel A1-C2 -->
+        <div class="card" id="artikel">
+            <h2>Koleksi Artikel Latihan (A1 - C2)</h2>
+            <p>Tingkatkan pemahaman membaca (*Leseverstehen*) melalui teks berseri:</p>
+
+            <div class="article-item">
+                <h3>Level A1: Mein Alltag</h3>
+                <p class="deutsch-text">Ich heiße Bruno und komme aus Indonesien. Ich wohne in Bekasi. Jeden Tag stehe ich früh auf und trinke eine Tasse Kaffee.</p>
+                <p class="indo-text"><strong>Terjemahan:</strong> Nama saya Bruno dan saya berasal dari Indonesia. Saya tinggal di Bekasi. Setiap hari saya bangun pagi dan minum secangkir kopi.</p>
+            </div>
+
+            <div class="article-item">
+                <h3>Level B1: Die Bedeutung des lebenslangen Lernens</h3>
+                <p class="deutsch-text">In der heutigen modernen Welt ist es sehr wichtig, niemals mit dem Lernen aufzuhören. Bildung öffnet viele Türen zum Erfolg.</p>
+                <p class="indo-text"><strong>Terjemahan:</strong> Di dunia modern saat ini, sangat penting untuk tidak pernah berhenti belajar. Pendidikan membuka banyak pintu menuju kesuksesan.</p>
+            </div>
+
+            <div class="article-item">
+                <h3>Level C2: Die Wechselwirkung von Sprache und Kultur</h3>
+                <p class="deutsch-text">Sprache ist weit mehr als nur ein Instrument zur Informationsübertragung; sie ist das fundamentale Spiegelbild einer Kultur.</p>
+                <p class="indo-text"><strong>Terjemahan:</strong> Bahasa jauh lebih dari sekadar instrumen untuk transmisi informasi; bahasa adalah cerminan fundamental dari suatu budaya.</p>
+            </div>
         </div>
 
-        <!-- B2 -->
-        <div class="article-box">
-            <h3>Level B2: Herausforderungen beim Erlernen einer Fremdsprache</h3>
-            <p class="deutsch-text"><strong>Deutsch:</strong> Das Erlernen einer Fremdsprache auf dem B2-Niveau erfordert Geduld, strategische Planung und kontinuierliche Praxis. Viele Lernende haben Schwierigkeiten mit der Grammatik, den Artikeln und dem Wortschatz. Um diese Hürden zu überwinden, ist es ratsam, aktiv zu schreiben, Texte zu analysieren und sich mit Muttersprachlern auszutauschen. Goethe-Zertifikate oder strukturierte Online-Übungen bieten hierbei eine hervorragende Orientierung. Letztendlich zahlt sich die Mühe aus, wenn man fließend kommunizieren kann.</p>
-            <p class="indo-text"><strong>Terjemahan:</strong> Mempelajari bahasa asing pada level B2 membutuhkan kesabaran, perencanaan strategis, dan latihan terus-menerus. Banyak pembelajar mengalami kesulitan dengan tata bahasa, artikel, dan kosakata. Untuk mengatasi hambatan ini, disarankan untuk aktif menulis, menganalisis teks, dan bertukar pikiran dengan penutur asli. Sertifikat Goethe atau latihan online yang terstruktur memberikan orientasi yang luar biasa dalam hal ini. Pada akhirnya, kerja keras tersebut terbayar ketika seseorang dapat berkomunikasi dengan lancar.</p>
-        </div>
-
-        <!-- C1 -->
-        <div class="article-box">
-            <h3>Level C1: Die Digitalisierung der Logistikbranche</h3>
-            <p class="deutsch-text"><strong>Deutsch:</strong> Die globale Logistikbranche befindet sich in einem tiefgreifenden Wandel, der maßgeblich durch die fortschreitende Digitalisierung und Automatisierung vorangetrieben wird. Intelligente Routenplanung, Echtzeit-Sendungsverfolgung und automatisierte Lagerverwaltungssysteme revolutionieren die traditionellen Abläufe. Für Fachkräfte in diesem Sektor bedeutet dies, dass technologische Kompetenzen zunehmend an Bedeutung gewinnen. Wer wettbewerbsfähig bleiben möchte, muss bereit sein, sich kontinuierlich weiterzubilden und innovative Arbeitsmethoden schnell in den Berufsalltag zu integrieren.</p>
-            <p class="indo-text"><strong>Terjemahan:</strong> Industri logistik global sedang mengalami transformasi mendalam yang didorong secara signifikan oleh digitalisasi dan otomatisasi yang sedang berlangsung. Perencanaan rute cerdas, pelacakan pengiriman secara real-time, dan sistem manajemen gudang otomatis merevolusi prosedur tradisional. Bagi para profesional di sektor ini, hal ini berarti bahwa kompetensi teknologi menjadi semakin penting. Siapa pun yang ingin tetap kompetitif harus siap untuk terus belajar dan mengintegrasikan metode kerja inovatif dengan cepat ke dalam rutinitas kerja sehari-hari.</p>
-        </div>
-
-        <!-- C2 -->
-        <div class="article-box">
-            <h3>Level C2: Die Wechselwirkung von Sprache und Kultur</h3>
-            <p class="deutsch-text"><strong>Deutsch:</strong> Sprache ist weit mehr als nur ein Instrument zur bloßen Informationsübertragung; sie ist das fundamentale Spiegelbild einer Kultur, ihrer historischen Entwicklung und ihrer gesellschaftlichen Werte. Wer eine Sprache auf höchstem Niveau beherrscht, dringt unweigerlich in die feinsten Nuancen des kollektiven Denkens einer Gesellschaft ein. Idiomatischer Ausdruck, subtextuelle Ironie und regionale Dialekte verdeutlichen, dass sprachliche Kompetenz untrennbar mit interkultureller Sensibilität verknüpft ist. Folglich bedeutet das Erlernen einer Sprache auf C2-Ebene nicht nur die Perfektionierung von Grammatik, sondern eine tiefgreifende Horizonterweiterung.</p>
-            <p class="indo-text"><strong>Terjemahan:</strong> Bahasa jauh lebih dari sekadar instrumen untuk transmisi informasi belaka; bahasa adalah cerminan fundamental dari suatu budaya, perkembangan historisnya, dan nilai-nilai kemasyarakatan. Siapa pun yang menguasai suatu bahasa pada tingkat tertinggi mau tak mau akan meresap ke dalam nuansa terpancar dari pemikiran kolektif suatu masyarakat. Ekspresi idiomatis, ironi subtekstual, dan dialek regional memperjelas bahwa kompetensi linguistik tidak dapat dipisahkan dari kepekaan antarbudaya. Akibatnya, mempelajari suatu bahasa pada level C2 bukan sekadar menyempurnakan tata bahasa, melainkan perluasan cakrawala yang mendalam.</p>
-        </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 - Dibuat oleh LeerCode</p>
+        <p>&copy; 2026 - Designed & Built by LeerCode</p>
     </footer>
 
     <script>
-        const kamus = {
-            "rumah": "das Haus (Rumah)",
-            "haus": "Rumah (das Haus)",
-            "sekolah": "die Schule (Sekolah)",
-            "schule": "Sekolah (die Schule)",
-            "komputer": "der Computer (Komputer)",
-            "computer": "Komputer (der Computer)",
-            "halo": "Hallo / Guten Tag",
-            "terima kasih": "Danke schön",
-            "selamat pagi": "Guten Morgen"
-        };
-
-        function cariTerjemahan() {
-            const input = document.getElementById("wordInput").value.toLowerCase().trim();
+        async function cariKamusOnline() {
+            const kata = document.getElementById("wordInput").value.trim().toLowerCase();
             const output = document.getElementById("resultOutput");
 
-            if (kamus[input]) {
-                output.innerHTML = "Terjemahan: " + kamus[input];
-            } else {
-                output.innerHTML = "Maaf, kata '" + input + "' belum ada di kamus mini ini. Coba kata lain!";
+            if (!kata) {
+                output.innerHTML = "⚠️ Silakan masukkan kata terlebih dahulu!";
+                return;
+            }
+
+            output.innerHTML = "Mencari data dari kamus online...";
+
+            try {
+                const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/de/${kata}`);
+                
+                if (!response.ok) {
+                    throw new Error("Kata tidak ditemukan.");
+                }
+
+                const data = await response.json();
+                let artiList = "";
+
+                data[0].meanings.forEach(meaning => {
+                    meaning.definitions.forEach((def, index) => {
+                        if(index < 2) {
+                            artiList += `<li style="margin-bottom: 8px;"><strong>${meaning.partOfSpeech}:</strong> ${def.definition} ${def.example ? `<br><em style="color:#94a3b8;">Contoh: "${def.example}"</em>` : ''}</li>`;
+                        }
+                    });
+                });
+
+                output.innerHTML = `<strong>Hasil untuk "${kata}":</strong><ul style="margin-top: 8px; padding-left: 20px;">${artiList}</ul>`;
+            } catch (error) {
+                output.innerHTML = `❌ Maaf, kata <strong>"${kata}"</strong> tidak ditemukan dalam database kamus.`;
             }
         }
     </script>
 
 </body>
 </html>
-
