@@ -3,181 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeerDeutsch | Portal Berita & Belajar Jerman</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>LeerDeutsch | Portal Belajar Jerman</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #121212;
-            --surface: #1e1e1e;
-            --surface-card: #252525;
-            --primary: #8b5cf6;
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border: #333333;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.6; }
-
-        .top-bar {
-            background-color: var(--surface); border-bottom: 1px solid var(--border);
-            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000;
-        }
-        .menu-toggle { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
-        .logo-title { font-weight: 700; font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 6px; }
-        .logo-title span { background: var(--primary); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
-
-        .sidebar {
-            position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
-            background-color: var(--surface); border-right: 1px solid var(--border);
-            z-index: 2000; transition: left 0.3s ease; padding: 20px; box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-        }
-        .sidebar.active { left: 0; }
-        .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-        .sidebar-close { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
-        .nav-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 500; padding: 10px 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px; transition: background 0.2s; }
-        .nav-links a:hover { background-color: rgba(139, 92, 246, 0.2); color: var(--primary); }
-
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1500; display: none; }
-        .overlay.active { display: block; }
-
-        .action-container { padding: 16px; display: flex; gap: 10px; background-color: var(--surface); border-bottom: 1px solid var(--border); }
-        .action-btn { flex: 1; background-color: var(--surface-card); border: 1px solid var(--border); color: var(--text-main); padding: 12px; border-radius: 8px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; }
-
-        .feed-container { padding: 16px; max-width: 800px; margin: 0 auto; }
-        .news-card { background-color: var(--surface-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        .news-banner { background: linear-gradient(135deg, #2a2a2a, #1f1f1f); padding: 20px; border-bottom: 1px solid var(--border); }
-        .news-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; font-size: 0.75rem; }
-        .badge-level { background: #7c3aed; color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
-        .news-title { font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
-        
-        .news-body { padding: 20px; }
-        .indo-text { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px; }
-        
-        .translator-box { background: var(--bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
-        .input-group { display: flex; gap: 8px; }
-        input[type="text"] { flex: 1; padding: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 0.95rem; }
-        button.translate-btn { background: var(--primary); color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        .result-output { margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); }
-
-        .article-list-item { padding: 14px 0; border-bottom: 1px solid var(--border); }
-        .article-list-item:last-child { border-bottom: none; }
-        .article-link { color: #38bdf8; text-decoration: none; font-weight: 600; display: block; margin-bottom: 4px; font-size: 1rem; }
-        .article-link:hover { text-decoration: underline; }
-
-        footer { text-align: center; padding: 16px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 30px; background: var(--surface); }
+        :root { --bg: #121212; --surface: #1e1e1e; --primary: #8b5cf6; --text: #e2e8f0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; }
+        .header { background: var(--surface); padding: 15px; text-align: center; font-weight: 700; border-bottom: 1px solid #333; }
+        .container { padding: 15px; }
+        .news-card { background: var(--surface); border-radius: 12px; padding: 15px; margin-bottom: 20px; }
+        h2 { font-size: 1.2rem; margin-bottom: 10px; color: var(--primary); }
+        /* Iframe untuk menampilkan web lain di dalam web kita */
+        .news-frame { width: 100%; height: 600px; border: none; border-radius: 8px; background: white; }
+        .translator { background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #444; background: #000; color: white; margin-bottom: 10px; }
+        button { width: 100%; padding: 10px; background: var(--primary); border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div class="top-bar">
-        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-        <div class="logo-title">LeerDeutsch <span>PRO</span></div>
-        <div style="width: 24px;"></div>
-    </div>
-
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3>Menu Utama</h3>
-            <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+    <div class="header">LeerDeutsch PRO</div>
+    <div class="container">
+        <!-- Translator -->
+        <div class="translator">
+            <h2>🔍 Penerjemah Cepat</h2>
+            <input type="text" id="wordInput" placeholder="Ketik kata Jerman...">
+            <button onclick="terjemahkan()">Cari di Google Translate</button>
         </div>
-        <ul class="nav-links">
-            <li><a href="#feed">📰 Berita & Artikel</a></li>
-            <li><a href="#translator">🔍 Kamus & Penerjemah</a></li>
-            <li><a href="#tentang">👤 Tentang Pembuat</a></li>
-        </ul>
-    </div>
 
-    <div class="action-container" id="translator">
-        <a href="https://translate.google.com/?sl=de&tl=id" target="_blank" class="action-btn">📖 Look up (Google Translate)</a>
-    </div>
-
-    <div class="feed-container" id="feed">
+        <!-- Jendela Berita Otomatis -->
+        <div class="news-card">
+            <h2>📰 Berita Jerman Terbaru (Nachrichtenleicht)</h2>
+            <iframe src="https://www.nachrichtenleicht.de/" class="news-frame"></iframe>
+        </div>
         
-        <!-- Live Translator Tool Card -->
         <div class="news-card">
-            <div class="news-banner">
-                <div class="news-meta">
-                    <span class="badge-level">Tools</span>
-                </div>
-                <div class="news-title">Penerjemah Cepat Bahasa Jerman</div>
-            </div>
-            <div class="news-body">
-                <p class="indo-text">Ketik kata atau kalimat bahasa Jerman untuk diterjemahkan instan:</p>
-                <div class="translator-box">
-                    <div class="input-group">
-                        <input type="text" id="wordInput" placeholder="Ketik kata (cth: helfen)..." onkeypress="handleEnter(event)">
-                        <button class="translate-btn" onclick="terjemahkanGoogle()">Cari</button>
-                    </div>
-                    <div class="result-output" id="resultOutput">Hasil pencarian akan muncul di sini...</div>
-                </div>
-            </div>
+            <h2>🎧 Berita Audio (Deutsche Welle)</h2>
+            <iframe src="https://learngerman.dw.com/de/overview" class="news-frame"></iframe>
         </div>
-
-        <!-- Daftar Artikel & Berita Pilihan -->
-        <div class="news-card">
-            <div class="news-banner">
-                <div class="news-meta">
-                    <span class="badge-level" style="background:#059669;">Update</span>
-                </div>
-                <div class="news-title">Berita & Bacaan Pilihan Bahasa Jerman</div>
-            </div>
-            <div class="news-body">
-                <p class="indo-text">Klik salah satu tautan di bawah untuk membaca berita asli berbahasa Jerman:</p>
-                
-                <div class="article-list-item">
-                    <a href="https://www.nachrichtenleicht.de" target="_blank" class="article-link">📌 Nachrichtenleicht - Berita Mudah Bahasa Jerman</a>
-                    <p style="font-size: 0.85rem; color: #94a3b8;">Portal berita resmi dengan kosakata yang disederhanakan untuk tingkat pemula.</p>
-                </div>
-
-                <div class="article-list-item">
-                    <a href="https://www.dw.com/de/langsam-gesprochene-nachrichten/s-2275" target="_blank" class="article-link">📌 Deutsche Welle (DW) - Langsam gesprochene Nachrichten</a>
-                    <p style="font-size: 0.85rem; color: #94a3b8;">Berita audio dan teks berbahasa Jerman yang dibaca dengan tempo lambat.</p>
-                </div>
-
-                <div class="article-list-item">
-                    <a href="https://www.tagesschau.de" target="_blank" class="article-link">📌 Tagesschau - Berita Utama Jerman</a>
-                    <p style="font-size: 0.85rem; color: #94a3b8;">Sumber berita harian teraktual langsung dari Jerman untuk tingkat mahir.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="news-card" id="tentang">
-            <div class="news-banner">
-                <div class="news-title">Tentang Pembuat</div>
-            </div>
-            <div class="news-body">
-                <p class="indo-text">Website ini dikembangkan oleh <strong>Leer</strong> sebagai pusat akses cepat berita dan media latihan belajar bahasa Jerman.</p>
-            </div>
-        </div>
-
     </div>
-
-    <footer>
-        <p>&copy; 2026 LeerDeutsch PRO</p>
-    </footer>
-
     <script>
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
-
-        function terjemahkanGoogle() {
-            const input = document.getElementById("wordInput").value.trim();
-            const output = document.getElementById("resultOutput");
-            if (!input) {
-                output.innerHTML = "⚠️ Ketik sesuatu dulu!";
-                return;
-            }
-            const urlTranslate = `https://translate.google.com/?sl=de&tl=id&text=${encodeURIComponent(input)}&op=translate`;
-            output.innerHTML = `🌐 Terjemahan <strong>"${input}"</strong> siap: <a href="${urlTranslate}" target="_blank" style="color: #8b5cf6; font-weight: 700; text-decoration: underline;">Buka Google Translate</a>`;
-        }
-
-        function handleEnter(event) {
-            if (event.key === "Enter") { terjemahkanGoogle(); }
+        function terjemahkan() {
+            const val = document.getElementById("wordInput").value;
+            window.open(`https://translate.google.com/?sl=de&tl=id&text=${val}`, '_blank');
         }
     </script>
 </body>
