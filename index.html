@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeerDeutsch | Portal Berita & Belajar Jerman Otomatis</title>
+    <title>LeerDeutsch | Portal Berita & Belajar Jerman</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -61,10 +61,10 @@
         button.translate-btn { background: var(--primary); color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
         .result-output { margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); }
 
-        .auto-article-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
-        .auto-article-item:last-child { border-bottom: none; }
-        .auto-article-title { color: #fff; text-decoration: none; font-weight: 600; display: block; margin-bottom: 4px; }
-        .auto-article-title:hover { color: var(--primary); }
+        .article-list-item { padding: 14px 0; border-bottom: 1px solid var(--border); }
+        .article-list-item:last-child { border-bottom: none; }
+        .article-link { color: #38bdf8; text-decoration: none; font-weight: 600; display: block; margin-bottom: 4px; font-size: 1rem; }
+        .article-link:hover { text-decoration: underline; }
 
         footer { text-align: center; padding: 16px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 30px; background: var(--surface); }
     </style>
@@ -73,7 +73,7 @@
 
     <div class="top-bar">
         <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-        <div class="logo-title">LeerDeutsch <span>AUTO</span></div>
+        <div class="logo-title">LeerDeutsch <span>PRO</span></div>
         <div style="width: 24px;"></div>
     </div>
 
@@ -84,7 +84,7 @@
             <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
         </div>
         <ul class="nav-links">
-            <li><a href="#feed">📰 Berita Otomatis</a></li>
+            <li><a href="#feed">📰 Berita & Artikel</a></li>
             <li><a href="#translator">🔍 Kamus & Penerjemah</a></li>
             <li><a href="#tentang">👤 Tentang Pembuat</a></li>
         </ul>
@@ -116,17 +116,31 @@
             </div>
         </div>
 
-        <!-- Live Feed Berita Jerman Otomatis (RSS Feed dari Nachrichtenleicht / DW) -->
+        <!-- Daftar Artikel & Berita Pilihan -->
         <div class="news-card">
             <div class="news-banner">
                 <div class="news-meta">
-                    <span class="badge-level" style="background:#059669;">Live Update</span>
-                    <span class="badge-time">Otomatis Harian</span>
+                    <span class="badge-level" style="background:#059669;">Update</span>
                 </div>
-                <div class="news-title">Berita Bahasa Jerman Terbaru (Nachrichtenleicht)</div>
+                <div class="news-title">Berita & Bacaan Pilihan Bahasa Jerman</div>
             </div>
-            <div class="news-body" id="rss-feed-container">
-                <p class="indo-text">Memuat artikel terbaru secara otomatis dari internet...</p>
+            <div class="news-body">
+                <p class="indo-text">Klik salah satu tautan di bawah untuk membaca berita asli berbahasa Jerman:</p>
+                
+                <div class="article-list-item">
+                    <a href="https://www.nachrichtenleicht.de" target="_blank" class="article-link">📌 Nachrichtenleicht - Berita Mudah Bahasa Jerman</a>
+                    <p style="font-size: 0.85rem; color: #94a3b8;">Portal berita resmi dengan kosakata yang disederhanakan untuk tingkat pemula.</p>
+                </div>
+
+                <div class="article-list-item">
+                    <a href="https://www.dw.com/de/langsam-gesprochene-nachrichten/s-2275" target="_blank" class="article-link">📌 Deutsche Welle (DW) - Langsam gesprochene Nachrichten</a>
+                    <p style="font-size: 0.85rem; color: #94a3b8;">Berita audio dan teks berbahasa Jerman yang dibaca dengan tempo lambat.</p>
+                </div>
+
+                <div class="article-list-item">
+                    <a href="https://www.tagesschau.de" target="_blank" class="article-link">📌 Tagesschau - Berita Utama Jerman</a>
+                    <p style="font-size: 0.85rem; color: #94a3b8;">Sumber berita harian teraktual langsung dari Jerman untuk tingkat mahir.</p>
+                </div>
             </div>
         </div>
 
@@ -135,7 +149,7 @@
                 <div class="news-title">Tentang Pembuat</div>
             </div>
             <div class="news-body">
-                <p class="indo-text">Website ini dikembangkan oleh <strong>Leer</strong> dan terhubung secara otomatis ke sumber berita bahasa Jerman agar selalu ada bahan bacaan baru setiap hari tanpa perlu coding manual.</p>
+                <p class="indo-text">Website ini dikembangkan oleh <strong>Leer</strong> sebagai pusat akses cepat berita dan media latihan belajar bahasa Jerman.</p>
             </div>
         </div>
 
@@ -165,37 +179,6 @@
         function handleEnter(event) {
             if (event.key === "Enter") { terjemahkanGoogle(); }
         }
-
-        // Fungsi mengambil artikel otomatis dari RSS publik berita Jerman mudah (Nachrichtenleicht)
-        async function fetchRssFeed() {
-            const container = document.getElementById('rss-feed-container');
-            try {
-                // Menggunakan public RSS-to-JSON API untuk mengambil berita berbahasa Jerman
-                const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.nachrichtenleicht.de%2Fnachrichtenleicht-nachrichten-100.rss');
-                const data = await response.json();
-                
-                if (data.status === 'ok') {
-                    let htmlContent = '';
-                    data.items.slice(0, 5).forEach(item => {
-                        htmlContent += `
-                            <div class="auto-article-item">
-                                <a href="${item.link}" target="_blank" class="auto-article-title">📌 ${item.title}</a>
-                                <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 4px;">${item.pubDate.substring(0, 10)}</p>
-                                <p style="font-size: 0.9rem; color: #cbd5e1;">${item.description.replace(/<[^>]*>?/gm, '').substring(0, 100)}...</p>
-                            </div>
-                        `;
-                    });
-                    container.innerHTML = htmlContent;
-                } else {
-                    container.innerHTML = '<p class="indo-text">Gagal memuat artikel otomatis.</p>';
-                }
-            } catch (error) {
-                container.innerHTML = '<p class="indo-text">Terhubung ke internet diperlukan untuk memuat artikel otomatis.</p>';
-            }
-        }
-
-        // Jalankan fungsi saat halaman dibuka
-        fetchRssFeed();
     </script>
 </body>
 </html>
