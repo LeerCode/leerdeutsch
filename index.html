@@ -3,61 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mein Deutschportal - Kamus & Artikel Jerman</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>LeerDeutsch | Portal Belajar Jerman Gen Z</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2563eb; --primary-dark: #1d4ed8; --bg-color: #0f172a; --card-bg: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8; --border: #334155; }
+        :root {
+            --bg: #090d16;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary: #8b5cf6;
+            --secondary: #ec4899;
+            --accent: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.8; }
-        header { background: linear-gradient(135deg, #1e293b, #0f172a); padding: 3rem 1rem; text-align: center; border-bottom: 1px solid var(--border); }
-        header h1 { font-size: 2.2rem; background: linear-gradient(to right, #60a5fa, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
-        header p { color: var(--text-muted); margin-top: 0.5rem; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.8;
+            background-image: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%);
+            background-attachment: fixed;
+            scroll-behavior: smooth;
+        }
+        
+        /* Header Estetik */
+        header {
+            padding: 4rem 1rem 2rem;
+            text-align: center;
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        header p { color: var(--text-muted); font-size: 1.05rem; }
+
+        /* Navigasi Glassmorphism */
+        nav {
+            display: flex;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        nav a:hover {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
         .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
-        .card { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        h2 { color: #f1f5f9; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; font-size: 1.5rem; }
-        .input-group { display: flex; gap: 10px; margin-top: 15px; }
-        input[type="text"] { flex: 1; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border); background: #0f172a; color: white; font-size: 1rem; }
-        input[type="text"]:focus { outline: none; border-color: var(--primary); }
-        button { padding: 12px 24px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s; }
-        button:hover { background: var(--primary-dark); }
-        .result-box { margin-top: 20px; padding: 20px; background-color: #0f172a; border-radius: 8px; border-left: 4px solid var(--primary); color: var(--text-main); }
-        .article-content { margin-bottom: 35px; }
-        .article-content h3 { color: #38bdf8; font-size: 1.2rem; margin-bottom: 10px; }
-        .deutsch-text { font-style: italic; color: #e2e8f0; background: rgba(0,0,0,0.2); padding: 15px; border-left: 4px solid var(--primary); margin: 15px 0; }
-        .indo-text { color: var(--text-muted); }
-        footer { text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 40px; font-size: 0.9rem; }
+        
+        /* Kartu Glass Style */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        .card:hover { border-color: rgba(139, 92, 246, 0.3); }
+        
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--accent), #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Input & Button Gen Z Style */
+        .input-group { display: flex; gap: 12px; margin-top: 15px; }
+        input[type="text"] {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.6);
+            color: white;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        input[type="text"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
+        
+        button {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.2s;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+        button:hover { opacity: 0.9; transform: scale(1.02); }
+        
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            border-left: 4px solid var(--secondary);
+            color: var(--text-main);
+        }
+
+        /* Artikel Estetik */
+        .article-content { margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 30px; }
+        .article-content:last-child { border-bottom: none; padding-bottom: 0; }
+        .article-content h3 { color: var(--accent); font-size: 1.2rem; margin-bottom: 12px; font-weight: 700; }
+        .deutsch-text {
+            font-style: italic;
+            color: #f1f5f9;
+            background: rgba(139, 92, 246, 0.08);
+            padding: 18px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            margin: 12px 0;
+        }
+        .indo-text { color: var(--text-muted); font-size: 0.95rem; }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            margin-top: 50px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
+
     <header>
-        <h1>Mein Deutsch Lernportal</h1>
-        <p>Penerjemah Instan & Artikel Belajar Bahasa Jerman Komprehensif</p>
+        <span class="badge">✨ Deutsch Lernen Portal</span>
+        <h1>LeerDeutsch</h1>
+        <p>Eksplorasi bahasa dan budaya Jerman dengan gaya yang lebih modern & interaktif.</p>
     </header>
 
+    <nav>
+        <a href="#beranda">🔥 Beranda</a>
+        <a href="#kamus">⚡ Kamus Instan</a>
+        <a href="#artikel">📚 Artikel A1-C2</a>
+        <a href="#tentang">🚀 Tentang Saya</a>
+    </nav>
+
     <div class="container">
-        <!-- Kamus / Penerjemah Langsung Google -->
-        <div class="card" id="kamus">
-            <h2>Penerjemah Instan (Jerman - Indonesia)</h2>
-            <p>Ketik kata atau kalimat apa saja dalam bahasa Jerman, dan langsung terjemahkan melalui Google Translate:</p>
-            
-            <div class="input-group">
-                <input type="text" id="wordInput" placeholder="Ketik apa saja (contoh: helfen, wunderschön)..." onkeypress="handleEnter(event)">
-                <button onclick="terjemahkanGoogle()">Terjemahkan</button>
-            </div>
-            
-            <div class="result-box" id="resultOutput">
-                Hasil atau tautan terjemahan langsung akan muncul di sini...
-            </div>
+        <!-- Beranda -->
+        <div class="card" id="beranda">
+            <h2>Welcome, Leute!</h2>
+            <p>Platform belajar mandiri buat kamu yang mau menguasai bahasa Jerman dari nol sampai mahir. Dilengkapi alat terjemahan instan dan kurasi artikel mendalam.</p>
         </div>
 
-        <!-- Artikel Panjang A1 - C2 -->
-        <div class="card">
-            <h2>Artikel Mendalam (A1 - C2)</h2>
+        <!-- Kamus Online -->
+        <div class="card" id="kamus">
+            <h2>Instant Translator</h2>
+            <p>Mau tahu arti kata atau kalimat bahasa Jerman? Ketik apa saja di sini dan langsung meluncur ke Google Translate:</p>
+            <div class="input-group">
+                <input type="text" id="wordInput" placeholder="Ketik apa saja (cth: wunderschön)..." onkeypress="handleEnter(event)">
+                <button onclick="terjemahkanGoogle()">Translate</button>
+            </div>
+            <div class="result-box" id="resultOutput">Hasil terjemahan akan muncul di sini...</div>
+        </div>
+
+        <!-- Artikel A1-C2 -->
+        <div class="card" id="artikel">
+            <h2>Artikel & Bacaan (A1 - C2)</h2>
             
             <div class="article-content">
                 <h3>Level A1: Mein tägliches Leben</h3>
-                <p class="deutsch-text">Mein Name ist Bruno. Ich lebe in Bekasi, Indonesien. Mein Tag beginnt sehr früh, um genau 05:00 Uhr morgens. Zuerst trinke ich ein Glas Wasser und mache eine kurze Gymnastik. Danach bereite ich meinen Kaffee zu. Ich liebe die Stille des Morgens. Ab 08:00 Uhr arbeite ich als Logistik-Operator. Die Arbeit ist manchmal anstrengend, aber ich lerne dabei sehr viel über effiziente Prozesse. Am Abend widme ich mich voll und ganz dem Deutschlernen. Ich lese einfache Geschichten und versuche, neue Vokabeln in Sätzen zu verwenden. Um 22:00 Uhr gehe ich schlafen, um für den nächsten Tag fit zu sein.</p>
-                <p class="indo-text">Nama saya Bruno. Saya tinggal di Bekasi, Indonesia. Hari saya dimulai sangat awal, tepatnya pukul 05:00 pagi. Pertama, saya minum segelas air dan melakukan senam singkat. Setelah itu, saya menyiapkan kopi saya. Saya menyukai keheningan pagi hari. Mulai pukul 08:00 saya bekerja sebagai operator logistik. Pekerjaan ini terkadang melelahkan, tetapi saya belajar banyak tentang proses yang efisien. Di malam hari, saya mendedikasikan diri sepenuhnya untuk belajar bahasa Jerman. Saya membaca cerita-cerita sederhana dan mencoba menggunakan kosakata baru dalam kalimat. Pukul 22:00 saya tidur agar bugar untuk hari berikutnya.</p>
+                <p class="deutsch-text">Mein Name ist Leer. Ich lebe in Bekasi, Indonesien. Mein Tag beginnt sehr früh, um genau 05:00 Uhr morgens. Zuerst trinke ich ein Glas Wasser und mache eine kurze Gymnastik. Danach bereite ich meinen Kaffee zu. Ich liebe die Stille des Morgens. Ab 08:00 Uhr arbeite ich als Logistik-Operator. Die Arbeit ist manchmal anstrengend, aber ich lerne dabei sehr viel über effiziente Prozesse. Am Abend widme ich mich voll und ganz dem Deutschlernen. Ich lese einfache Geschichten und versuche, neue Vokabeln in Sätzen zu verwenden. Um 22:00 Uhr gehe ich schlafen, um für den nächsten Tag fit zu sein.</p>
+                <p class="indo-text">Nama saya Leer. Saya tinggal di Bekasi, Indonesia. Hari saya dimulai sangat awal, tepatnya pukul 05:00 pagi. Pertama, saya minum segelas air dan melakukan senam singkat. Setelah itu, saya menyiapkan kopi saya. Saya menyukai keheningan pagi hari. Mulai pukul 08:00 saya bekerja sebagai operator logistik. Pekerjaan ini terkadang melelahkan, tetapi saya belajar banyak tentang proses yang efisien. Di malam hari, saya mendedikasikan diri sepenuhnya untuk belajar bahasa Jerman. Saya membaca cerita-cerita sederhana dan mencoba menggunakan kosakata baru dalam kalimat. Pukul 22:00 saya tidur agar bugar untuk hari berikutnya.</p>
             </div>
 
             <div class="article-content">
@@ -72,33 +226,32 @@
                 <p class="indo-text">Bahasa Jerman dicirikan oleh presisi struktural yang memungkinkan artikulasi masalah kompleks dengan akurasi yang luar biasa. Sering diklaim bahwa bahasa Jerman adalah bahasa yang "sulit", tetapi kompleksitas inilah yang membuatnya begitu ekspresif. Dari karya filosofis Immanuel Kant hingga karya liris agung Johann Wolfgang von Goethe – bahasa Jerman menawarkan akses ke kedalaman pemikiran yang seringkali sulit untuk direproduksi dalam bahasa lain. Bagi pembelajar tingkat lanjut, level C2 bukan sekadar penguasaan tata bahasa, melainkan hubungan intuitif dengan nuansa budaya yang membentuk identitas Jerman. Ini adalah proses penemuan seumur hidup yang menajamkan pikiran dan memperluas cakrawala tanpa batas.</p>
             </div>
         </div>
+
+        <!-- Tentang Saya -->
+        <div class="card" id="tentang">
+            <h2>Tentang Pembuat</h2>
+            <p>Website ini dibangun dan dikembangkan secara mandiri oleh <strong>Leer</strong> sebagai media digital untuk mengasah konsistensi belajar serta membagikan progres penguasaan bahasa Jerman.</p>
+        </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 - Designed & Built by LeerCode</p>
+        <p>&copy; 2026 - Crafted with 💜 by LeerCode</p>
     </footer>
 
     <script>
         function terjemahkanGoogle() {
             const input = document.getElementById("wordInput").value.trim();
             const output = document.getElementById("resultOutput");
-
             if (!input) {
-                output.innerHTML = "⚠️ Silakan ketik kata atau kalimat terlebih dahulu!";
+                output.innerHTML = "⚠️ Ketik sesuatu dulu dong!";
                 return;
             }
-
-            // Langsung arahkan ke Google Translate tanpa batasan database
             const urlTranslate = `https://translate.google.com/?sl=de&tl=id&text=${encodeURIComponent(input)}&op=translate`;
-            
             output.innerHTML = `🌐 Terjemahan untuk <strong>"${input}"</strong> siap:<br><br>
-            <a href="${urlTranslate}" target="_blank" style="display:inline-block; background:#2563eb; color:white; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:600;">👉 Buka Terjemahan di Google Translate</a>`;
+            <a href="${urlTranslate}" target="_blank" style="display:inline-block; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; padding:10px 22px; border-radius:10px; text-decoration:none; font-weight:700; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);">🚀 Buka Google Translate</a>`;
         }
-
         function handleEnter(event) {
-            if (event.key === "Enter") {
-                terjemahkanGoogle();
-            }
+            if (event.key === "Enter") { terjemahkanGoogle(); }
         }
     </script>
 </body>
