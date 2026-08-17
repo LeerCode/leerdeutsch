@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeerDeutsch | Portal Berita & Belajar</title>
+    <title>LeerDeutsch PRO | Portal Belajar & Berita Jerman</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #121212; --surface: #1e1e1e; --card-bg: #252525; --primary: #8b5cf6; --text-main: #e2e8f0; --text-muted: #94a3b8; --border: #333333; }
+        :root { --bg: #0f172a; --surface: #1e293b; --card-bg: #1e293b; --primary: #8b5cf6; --text-main: #f8fafc; --text-muted: #94a3b8; --border: #334155; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.6; }
 
@@ -15,17 +15,24 @@
         .logo-title span { background: var(--primary); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
         .back-btn { background: none; border: none; color: #38bdf8; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: none; }
 
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background-color: var(--surface); border-right: 1px solid var(--border); z-index: 2000; transition: left 0.3s ease; padding: 20px; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background-color: var(--surface); border-right: 1px solid var(--border); z-index: 2000; transition: left 0.3s ease; padding: 20px; box-shadow: 5px 0 15px rgba(0,0,0,0.5); overflow-y: auto; }
         .sidebar.active { left: 0; }
         .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
         .sidebar-close { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
-        .nav-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .nav-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
         .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 500; padding: 10px 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.2s; }
         .nav-links a:hover { background-color: rgba(139, 92, 246, 0.2); color: var(--primary); }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1500; display: none; }
         .overlay.active { display: block; }
 
         .container { max-width: 800px; margin: 20px auto; padding: 0 16px; }
+        .section-box { display: none; }
+        .section-box.active { display: block; }
+
+        .filter-container { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; }
+        .filter-btn { padding: 6px 14px; border-radius: 20px; border: none; background: #334155; color: white; cursor: pointer; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+        .filter-btn.active { background: var(--primary); }
+
         .news-card { background-color: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; cursor: pointer; transition: border-color 0.2s; }
         .news-card:hover { border-color: var(--primary); }
         .news-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; font-size: 0.75rem; }
@@ -36,7 +43,7 @@
         .article-view { display: none; background: var(--surface); border-radius: 12px; padding: 24px; border: 1px solid var(--border); }
         .article-view.active { display: block; }
         
-        .translate-control { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .translate-control { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border); }
         .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .3s; border-radius: 26px; }
@@ -58,6 +65,14 @@
         }
         .id-translation.show { display: block; }
 
+        .quiz-box { margin-top: 30px; background: #0f172a; padding: 20px; border-radius: 10px; border: 1px solid var(--border); }
+        .quiz-box h4 { color: #38bdf8; margin-bottom: 12px; }
+        .quiz-opt { display: block; background: #1e293b; padding: 10px 14px; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid var(--border); }
+        .quiz-opt:hover { border-color: var(--primary); }
+
+        .card { background-color: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .link-item { display: block; background: #0f172a; padding: 14px; border-radius: 8px; margin-bottom: 10px; color: #38bdf8; text-decoration: none; font-weight: 600; border: 1px solid var(--border); }
+        
         footer { text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 40px; background: var(--surface); }
     </style>
 </head>
@@ -79,35 +94,37 @@
             <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
         </div>
         <ul class="nav-links">
-            <li><a onclick="toggleSidebar(); backToFeed();">📰 Beranda & Artikel</a></li>
+            <li><a onclick="toggleSidebar(); showSection('feedSection');">📰 Beranda & Feed Artikel</a></li>
+            <li><a onclick="toggleSidebar(); showSection('refSection');">🌐 Berita & Referensi</a></li>
+            <li><a onclick="toggleSidebar(); showSection('bookmarkSection');">⭐ Artikel Favorit (<span id="bmCount">0</span>)</a></li>
             <li><a href="https://translate.google.com/?sl=de&tl=id" target="_blank">🔍 Kamus Google Translate</a></li>
-            <li><a onclick="toggleSidebar(); alert('LeerDeutsch PRO v2.0 - Dibuat oleh Leer');">👤 Tentang Pembuat</a></li>
+            <li><a onclick="toggleSidebar(); showSection('aboutSection');">👤 Tentang & Visi Misi</a></li>
         </ul>
     </div>
 
     <div class="container">
-        <div id="feedList">
+        
+        <div id="feedSection" class="section-box active">
             <h2 style="margin-bottom: 15px; font-size: 1.2rem; color: var(--text-muted);">Daftar Artikel & Berita Terbaru</h2>
             
-            <div class="news-card" onclick="openArticle('artikel1')">
-                <div class="news-meta">
-                    <span class="badge-level">A1</span>
-                    <span class="badge-time">1 minutes</span>
-                </div>
-                <div class="news-title">Kapitel 2: Ein gemeiner Trick am Teich</div>
+            <div class="filter-container">
+                <button class="filter-btn active" onclick="filterFeed('all', this)">All</button>
+                <button class="filter-btn" onclick="filterFeed('A1', this)">A1</button>
+                <button class="filter-btn" onclick="filterFeed('A2', this)">A2</button>
+                <button class="filter-btn" onclick="filterFeed('B1', this)">B1</button>
+                <button class="filter-btn" onclick="filterFeed('B2', this)">B2</button>
+                <button class="filter-btn" onclick="filterFeed('C1', this)">C1</button>
+                <button class="filter-btn" onclick="filterFeed('C2', this)">C2</button>
             </div>
 
-            <div class="news-card" onclick="openArticle('artikel2')">
-                <div class="news-meta">
-                    <span class="badge-level" style="background:#2563eb;">B1</span>
-                    <span class="badge-time">2 minutes</span>
-                </div>
-                <div class="news-title">Warum ist Deutschlernen lohnenswert?</div>
-            </div>
+            <div id="feedList"></div>
         </div>
 
         <div id="articleView" class="article-view">
-            <h2 id="articleTitle" style="color: #38bdf8; margin-bottom: 15px; font-size: 1.4rem;"></h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 id="articleTitle" style="color: #38bdf8; font-size: 1.3rem;"></h2>
+                <button id="bmBtn" onclick="toggleBookmarkCurrent()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;" title="Simpan Artikel">⭐</button>
+            </div>
             
             <div class="translate-control">
                 <span style="font-weight: 600; font-size: 0.95rem;">Suggested translation</span>
@@ -118,7 +135,52 @@
             </div>
 
             <div id="articleContent"></div>
+
+            <div class="quiz-box">
+                <h4>💡 Kuis Pemahaman Cepat</h4>
+                <p id="quizQuestion" style="margin-bottom: 10px; font-weight: 600;"></p>
+                <div id="quizOptions"></div>
+                <p id="quizFeedback" style="margin-top: 10px; font-weight: bold;"></p>
+            </div>
         </div>
+
+        <div id="refSection" class="section-box">
+            <div class="card">
+                <h2>🌐 Berita & Sumber Referensi Eksternal</h2>
+                <p style="color:var(--text-muted); margin-bottom:15px; font-size:0.9rem;">Portal resmi Jerman untuk latihan membaca tambahan:</p>
+                <a href="https://www.nachrichtenleicht.de/" target="_blank" class="link-item">📌 Nachrichtenleicht (Berita Mudah A2-B1)</a>
+                <a href="https://learngerman.dw.com/de/overview" target="_blank" class="link-item">📌 DW Learn German (Media & Audio)</a>
+                <a href="https://www.tagesschau.de/" target="_blank" class="link-item">📌 Tagesschau (Berita Utama Mahir)</a>
+            </div>
+        </div>
+
+        <div id="bookmarkSection" class="section-box">
+            <div class="card">
+                <h2>⭐ Artikel Favorit Anda</h2>
+                <p style="color:var(--text-muted); margin-bottom:15px; font-size:0.9rem;">Daftar artikel yang Anda simpan untuk dibaca kembali:</p>
+                <div id="bookmarkList">
+                    <p style="color: var(--text-muted);">Belum ada artikel yang disimpan.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="aboutSection" class="section-box">
+            <div class="card">
+                <h2>👤 Tentang Pembuat & Visi Misi</h2>
+                <p style="margin-top:10px; color:#cbd5e1;">Halo! Saya <strong>Leer</strong>, kreator di balik <strong>LeerDeutsch PRO</strong>. Portal ini didedikasikan untuk Gen Z dan siapa saja yang ingin menguasai bahasa Jerman secara mandiri, praktis, dan berkelas.</p>
+                
+                <h4 style="color:#38bdf8; margin-top:20px;">🎯 Visi</h4>
+                <p style="color:#cbd5e1; font-style:italic;">"Menjadi ekosistem digital terdepan yang mendefinisikan ulang cara generasi muda menguasai bahasa Jerman secara mandiri—menggabungkan kedalaman materi, estetika modern, dan teknologi untuk mencetak talenta global yang kompetitif."</p>
+                
+                <h4 style="color:#38bdf8; margin-top:20px;">🚀 Misi</h4>
+                <ul style="margin-left:20px; color:#cbd5e1; margin-top:5px; display:flex; flex-direction:column; gap:6px;">
+                    <li>Belajar Tanpa Batas: Menyediakan kurasi materi terstruktur dari level A1 hingga C2.</li>
+                    <li>Eksplorasi Berbasis Teknologi: Integrasi terjemahan instan untuk pengalaman belajar tanpa hambatan.</li>
+                    <li>Kualitas Tanpa Kompromi: Konten mendalam, berbobot, dan ramah pengguna.</li>
+                </ul>
+            </div>
+        </div>
+
     </div>
 
     <footer>
@@ -128,30 +190,82 @@
     <script>
         const databaseArtikel = {
             'artikel1': {
+                level: 'A1',
+                time: '1 menit',
                 title: 'Kapitel 2: Ein gemeiner Trick am Teich',
                 sentences: [
                     { de: "Und tatsächlich begann sich Tẩms Leben am nächsten Morgen zu verändern.", id: "Dan sungguh, kehidupan Tắm mulai berubah keesokan paginya." },
                     { de: "Gemeinsam mit Cám ging sie zum Teich.", id: "Bersama dengan Cám, dia pergi ke kolam." },
                     { de: "Ihre Stiefmutter hatte gesagt: ‚Wer mehr Fische fängt, bekommt ein rotes Kleid.‘", id: "Ibu tirinya telah berkata: 'Siapa pun yang menangkap lebih banyak ikan akan mendapatkan gaun merah.'" },
                     { de: "Tắm arbeitete fleißig und bald war ihr Korb fast voll.", id: "Tắm bekerja dengan rajin dan segera keranjangnya hampir penuh." }
-                ]
+                ],
+                quiz: {
+                    q: "Wer bekam ein rotes Kleid nach der Regel der Stiefmutter?",
+                    options: ["Cám", "Tắm", "Der Vater"],
+                    answer: 1
+                }
             },
             'artikel2': {
+                level: 'B1',
+                time: '2 menit',
                 title: 'Warum ist Deutschlernen lohnenswert?',
                 sentences: [
                     { de: "Viele Menschen fragen sich, warum man heute noch Deutsch lernen sollte.", id: "Banyak orang bertanya-tanya mengapa seseorang harus belajar bahasa Jerman hari ini." },
                     { de: "Die Antwort ist einfach: Deutsch ist die Sprache von Denkern und Dichtern.", id: "Jawabannya sederhana: Bahasa Jerman adalah bahasa para pemikir dan penyair." },
                     { de: "Durch das Erlernen öffnen sich neue Türen in Technik und Wissenschaft.", id: "Dengan mempelajarinya, pintu-pintu baru terbuka di bidang teknik dan sains." }
-                ]
+                ],
+                quiz: {
+                    q: "Welche Türen öffnen sich durch das Erlernen der deutschen Sprache?",
+                    options: ["In Mode und Kunst", "In Technik und Wissenschaft", "Nur in der Freizeit"],
+                    answer: 1
+                }
             }
         };
+
+        let currentActiveId = null;
+        let bookmarks = JSON.parse(localStorage.getItem('leer_bookmarks')) || [];
+
+        function renderFeed(filter = 'all') {
+            let html = '';
+            for (let id in databaseArtikel) {
+                let art = databaseArtikel[id];
+                if (filter === 'all' || art.level === filter) {
+                    html += `
+                        <div class="news-card" onclick="openArticle('${id}')">
+                            <div class="news-meta">
+                                <span class="badge-level">${art.level}</span>
+                                <span class="badge-time">${art.time}</span>
+                            </div>
+                            <div class="news-title">${art.title}</div>
+                        </div>
+                    `;
+                }
+            }
+            document.getElementById('feedList').innerHTML = html || '<p style="color:var(--text-muted);">Tidak ada artikel untuk level ini.</p>';
+        }
+
+        function filterFeed(level, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderFeed(level);
+        }
 
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
         }
 
+        function showSection(sectionId) {
+            document.querySelectorAll('.section-box').forEach(s => s.classList.remove('active'));
+            document.getElementById('articleView').classList.remove('active');
+            document.getElementById(sectionId).classList.add('active');
+            document.getElementById('backBtn').style.display = 'none';
+            document.getElementById('menuBtn').style.display = 'block';
+            if(sectionId === 'bookmarkSection') renderBookmarks();
+        }
+
         function openArticle(id) {
+            currentActiveId = id;
             const art = databaseArtikel[id];
             document.getElementById('articleTitle').innerText = art.title;
             
@@ -164,11 +278,20 @@
                     </div>
                 `;
             });
-
             document.getElementById('articleContent').innerHTML = contentHTML;
             document.getElementById('translateToggle').checked = false;
 
-            document.getElementById('feedList').style.display = 'none';
+            let quizHTML = '';
+            art.quiz.options.forEach((opt, idx) => {
+                quizHTML += `<div class="quiz-opt" onclick="checkQuiz(${idx}, ${art.quiz.answer})">${opt}</div>`;
+            });
+            document.getElementById('quizQuestion').innerText = art.quiz.q;
+            document.getElementById('quizOptions').innerHTML = quizHTML;
+            document.getElementById('quizFeedback').innerText = '';
+
+            updateBookmarkIcon();
+
+            document.querySelectorAll('.section-box').forEach(s => s.classList.remove('active'));
             document.getElementById('articleView').classList.add('active');
             document.getElementById('backBtn').style.display = 'block';
             document.getElementById('menuBtn').style.display = 'none';
@@ -176,22 +299,84 @@
         }
 
         function backToFeed() {
-            document.getElementById('feedList').style.display = 'block';
             document.getElementById('articleView').classList.remove('active');
+            document.getElementById('feedSection').classList.add('active');
             document.getElementById('backBtn').style.display = 'none';
             document.getElementById('menuBtn').style.display = 'block';
         }
 
         function toggleTranslation(checkbox) {
-            const translations = document.querySelectorAll('.id-translation');
-            translations.forEach(el => {
-                if (checkbox.checked) {
-                    el.classList.add('show');
-                } else {
-                    el.classList.remove('show');
-                }
+            document.querySelectorAll('.id-translation').forEach(el => {
+                if (checkbox.checked) el.classList.add('show');
+                else el.classList.remove('show');
             });
         }
+
+        function checkQuiz(selected, correct) {
+            const feedback = document.getElementById('quizFeedback');
+            if (selected === correct) {
+                feedback.style.color = "#4ade80";
+                feedback.innerText = "🎉 Benar sekali! Hebat!";
+            } else {
+                feedback.style.color = "#f87171";
+                feedback.innerText = "❌ Kurang tepat, coba baca ulang kalimatnya ya.";
+            }
+        }
+
+        function toggleBookmarkCurrent() {
+            if (!currentActiveId) return;
+            let index = bookmarks.indexOf(currentActiveId);
+            if (index > -1) {
+                bookmarks.splice(index, 1);
+            } else {
+                bookmarks.push(currentActiveId);
+            }
+            localStorage.setItem('leer_bookmarks', JSON.stringify(bookmarks));
+            updateBookmarkIcon();
+            updateBookmarkCount();
+        }
+
+        function updateBookmarkIcon() {
+            const btn = document.getElementById('bmBtn');
+            if (bookmarks.includes(currentActiveId)) {
+                btn.style.opacity = "1";
+                btn.title = "Hapus dari Favorit";
+            } else {
+                btn.style.opacity = "0.4";
+                btn.title = "Simpan ke Favorit";
+            }
+        }
+
+        function updateBookmarkCount() {
+            document.getElementById('bmCount').innerText = bookmarks.length;
+        }
+
+        function renderBookmarks() {
+            let list = document.getElementById('bookmarkList');
+            if (bookmarks.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-muted);">Belum ada artikel yang disimpan.</p>';
+                return;
+            }
+            let html = '';
+            bookmarks.forEach(id => {
+                let art = databaseArtikel[id];
+                if (art) {
+                    html += `
+                        <div class="news-card" onclick="openArticle('${id}')">
+                            <div class="news-meta">
+                                <span class="badge-level">${art.level}</span>
+                                <span class="badge-time">${art.time}</span>
+                            </div>
+                            <div class="news-title">${art.title}</div>
+                        </div>
+                    `;
+                }
+            });
+            list.innerHTML = html;
+        }
+
+        renderFeed('all');
+        updateBookmarkCount();
     </script>
 </body>
 </html>
