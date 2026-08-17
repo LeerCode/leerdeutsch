@@ -3,256 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeerDeutsch | Portal Belajar Jerman Gen Z</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <title>LeerDeutsch | Portal Berita & Belajar Jerman Otomatis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #090d16;
-            --card-bg: rgba(30, 41, 59, 0.7);
+            --bg: #121212;
+            --surface: #1e1e1e;
+            --surface-card: #252525;
             --primary: #8b5cf6;
-            --secondary: #ec4899;
-            --accent: #38bdf8;
-            --text-main: #f8fafc;
+            --text-main: #e2e8f0;
             --text-muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
+            --border: #333333;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            line-height: 1.8;
-            background-image: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
-                              radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%);
-            background-attachment: fixed;
-            scroll-behavior: smooth;
-        }
-        
-        /* Header Estetik */
-        header {
-            padding: 4rem 1rem 2rem;
-            text-align: center;
-        }
-        .badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
-        }
-        header h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            background: linear-gradient(to right, #ffffff, #cbd5e1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
-        header p { color: var(--text-muted); font-size: 1.05rem; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.6; }
 
-        /* Navigasi Glassmorphism */
-        nav {
-            display: flex;
-            justify-content: center;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border);
-            padding: 1rem;
-            gap: 10px;
-            flex-wrap: wrap;
+        .top-bar {
+            background-color: var(--surface); border-bottom: 1px solid var(--border);
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
         }
-        nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-        nav a:hover {
-            background: rgba(139, 92, 246, 0.15);
-            color: var(--accent);
-            transform: translateY(-2px);
-        }
+        .menu-toggle { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+        .logo-title { font-weight: 700; font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 6px; }
+        .logo-title span { background: var(--primary); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
 
-        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
-        
-        /* Kartu Glass Style */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 35px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
+        .sidebar {
+            position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+            background-color: var(--surface); border-right: 1px solid var(--border);
+            z-index: 2000; transition: left 0.3s ease; padding: 20px; box-shadow: 5px 0 15px rgba(0,0,0,0.5);
         }
-        .card:hover { border-color: rgba(139, 92, 246, 0.3); }
-        
-        h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            background: linear-gradient(to right, var(--accent), #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .sidebar.active { left: 0; }
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .sidebar-close { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+        .nav-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 500; padding: 10px 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px; transition: background 0.2s; }
+        .nav-links a:hover { background-color: rgba(139, 92, 246, 0.2); color: var(--primary); }
 
-        /* Input & Button Gen Z Style */
-        .input-group { display: flex; gap: 12px; margin-top: 15px; }
-        input[type="text"] {
-            flex: 1;
-            padding: 14px 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: rgba(15, 23, 42, 0.6);
-            color: white;
-            font-size: 1rem;
-            font-family: inherit;
-        }
-        input[type="text"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
-        
-        button {
-            padding: 14px 28px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: opacity 0.3s, transform 0.2s;
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
-        }
-        button:hover { opacity: 0.9; transform: scale(1.02); }
-        
-        .result-box {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(15, 23, 42, 0.8);
-            border-radius: 12px;
-            border-left: 4px solid var(--secondary);
-            color: var(--text-main);
-        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1500; display: none; }
+        .overlay.active { display: block; }
 
-        /* Artikel Estetik */
-        .article-content { margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 30px; }
-        .article-content:last-child { border-bottom: none; padding-bottom: 0; }
-        .article-content h3 { color: var(--accent); font-size: 1.2rem; margin-bottom: 12px; font-weight: 700; }
-        .deutsch-text {
-            font-style: italic;
-            color: #f1f5f9;
-            background: rgba(139, 92, 246, 0.08);
-            padding: 18px;
-            border-radius: 12px;
-            border-left: 4px solid var(--primary);
-            margin: 12px 0;
-        }
-        .indo-text { color: var(--text-muted); font-size: 0.95rem; }
+        .action-container { padding: 16px; display: flex; gap: 10px; background-color: var(--surface); border-bottom: 1px solid var(--border); }
+        .action-btn { flex: 1; background-color: var(--surface-card); border: 1px solid var(--border); color: var(--text-main); padding: 12px; border-radius: 8px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; }
 
-        footer {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border);
-            margin-top: 50px;
-            font-size: 0.9rem;
-        }
+        .feed-container { padding: 16px; max-width: 800px; margin: 0 auto; }
+        .news-card { background-color: var(--surface-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .news-banner { background: linear-gradient(135deg, #2a2a2a, #1f1f1f); padding: 20px; border-bottom: 1px solid var(--border); }
+        .news-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; font-size: 0.75rem; }
+        .badge-level { background: #7c3aed; color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+        .news-title { font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+        
+        .news-body { padding: 20px; }
+        .indo-text { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px; }
+        
+        .translator-box { background: var(--bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
+        .input-group { display: flex; gap: 8px; }
+        input[type="text"] { flex: 1; padding: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 0.95rem; }
+        button.translate-btn { background: var(--primary); color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .result-output { margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); }
+
+        .auto-article-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .auto-article-item:last-child { border-bottom: none; }
+        .auto-article-title { color: #fff; text-decoration: none; font-weight: 600; display: block; margin-bottom: 4px; }
+        .auto-article-title:hover { color: var(--primary); }
+
+        footer { text-align: center; padding: 16px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 30px; background: var(--surface); }
     </style>
 </head>
 <body>
 
-    <header>
-        <span class="badge">✨ Deutsch Lernen Portal</span>
-        <h1>LeerDeutsch</h1>
-        <p>Eksplorasi bahasa dan budaya Jerman dengan gaya yang lebih modern & interaktif.</p>
-    </header>
+    <div class="top-bar">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="logo-title">LeerDeutsch <span>AUTO</span></div>
+        <div style="width: 24px;"></div>
+    </div>
 
-    <nav>
-        <a href="#beranda">🔥 Beranda</a>
-        <a href="#kamus">⚡ Kamus Instan</a>
-        <a href="#artikel">📚 Artikel A1-C2</a>
-        <a href="#tentang">🚀 Tentang Saya</a>
-    </nav>
-
-    <div class="container">
-        <!-- Beranda -->
-        <div class="card" id="beranda">
-            <h2>Welcome, Leute!</h2>
-            <p>Platform belajar mandiri buat kamu yang mau menguasai bahasa Jerman dari nol sampai mahir. Dilengkapi alat terjemahan instan dan kurasi artikel mendalam.</p>
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu Utama</h3>
+            <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
         </div>
+        <ul class="nav-links">
+            <li><a href="#feed">📰 Berita Otomatis</a></li>
+            <li><a href="#translator">🔍 Kamus & Penerjemah</a></li>
+            <li><a href="#tentang">👤 Tentang Pembuat</a></li>
+        </ul>
+    </div>
 
-        <!-- Kamus Online -->
-        <div class="card" id="kamus">
-            <h2>Instant Translator</h2>
-            <p>Mau tahu arti kata atau kalimat bahasa Jerman? Ketik apa saja di sini dan langsung meluncur ke Google Translate:</p>
-            <div class="input-group">
-                <input type="text" id="wordInput" placeholder="Ketik apa saja (cth: wunderschön)..." onkeypress="handleEnter(event)">
-                <button onclick="terjemahkanGoogle()">Translate</button>
+    <div class="action-container" id="translator">
+        <a href="https://translate.google.com/?sl=de&tl=id" target="_blank" class="action-btn">📖 Look up (Google Translate)</a>
+    </div>
+
+    <div class="feed-container" id="feed">
+        
+        <!-- Live Translator Tool Card -->
+        <div class="news-card">
+            <div class="news-banner">
+                <div class="news-meta">
+                    <span class="badge-level">Tools</span>
+                </div>
+                <div class="news-title">Penerjemah Cepat Bahasa Jerman</div>
             </div>
-            <div class="result-box" id="resultOutput">Hasil terjemahan akan muncul di sini...</div>
-        </div>
-
-        <!-- Artikel A1-C2 -->
-        <div class="card" id="artikel">
-            <h2>Artikel & Bacaan (A1 - C2)</h2>
-            
-            <div class="article-content">
-                <h3>Level A1: Mein tägliches Leben</h3>
-                <p class="deutsch-text">Mein Name ist Leer. Ich lebe in Bekasi, Indonesien. Mein Tag beginnt sehr früh, um genau 05:00 Uhr morgens. Zuerst trinke ich ein Glas Wasser und mache eine kurze Gymnastik. Danach bereite ich meinen Kaffee zu. Ich liebe die Stille des Morgens. Ab 08:00 Uhr arbeite ich als Logistik-Operator. Die Arbeit ist manchmal anstrengend, aber ich lerne dabei sehr viel über effiziente Prozesse. Am Abend widme ich mich voll und ganz dem Deutschlernen. Ich lese einfache Geschichten und versuche, neue Vokabeln in Sätzen zu verwenden. Um 22:00 Uhr gehe ich schlafen, um für den nächsten Tag fit zu sein.</p>
-                <p class="indo-text">Nama saya Leer. Saya tinggal di Bekasi, Indonesia. Hari saya dimulai sangat awal, tepatnya pukul 05:00 pagi. Pertama, saya minum segelas air dan melakukan senam singkat. Setelah itu, saya menyiapkan kopi saya. Saya menyukai keheningan pagi hari. Mulai pukul 08:00 saya bekerja sebagai operator logistik. Pekerjaan ini terkadang melelahkan, tetapi saya belajar banyak tentang proses yang efisien. Di malam hari, saya mendedikasikan diri sepenuhnya untuk belajar bahasa Jerman. Saya membaca cerita-cerita sederhana dan mencoba menggunakan kosakata baru dalam kalimat. Pukul 22:00 saya tidur agar bugar untuk hari berikutnya.</p>
-            </div>
-
-            <div class="article-content">
-                <h3>Level B1: Warum ist Deutschlernen lohnenswert?</h3>
-                <p class="deutsch-text">Viele Menschen fragen sich, warum man heute noch Deutsch lernen sollte, wo doch Englisch die Weltsprache ist. Die Antwort ist einfach: Deutsch ist die Sprache von Denkern, Erfindern und Dichtern. Durch das Erlernen der deutschen Sprache öffnen sich neue Türen in den Bereichen Technik, Wissenschaft und Philosophie. Deutschland ist das wirtschaftliche Herz Europas. Wenn man Deutsch spricht, verbessert man nicht nur seine Karrierechancen, sondern versteht auch die Kultur hinter den global agierenden Unternehmen besser. Es erfordert Disziplin und Zeit, aber das Gefühl, eine komplexe Sprache wie Deutsch zu meistern, ist eine unglaubliche Belohnung für jeden, der hart arbeitet.</p>
-                <p class="indo-text">Banyak orang bertanya-tanya mengapa seseorang harus belajar bahasa Jerman saat ini, padahal bahasa Inggris adalah bahasa dunia. Jawabannya sederhana: bahasa Jerman adalah bahasa para pemikir, penemu, dan penyair. Dengan mempelajari bahasa Jerman, pintu-pintu baru terbuka di bidang teknik, sains, dan filsafat. Jerman adalah jantung ekonomi Eropa. Jika Anda berbicara bahasa Jerman, Anda tidak hanya meningkatkan peluang karier Anda, tetapi juga lebih memahami budaya di balik perusahaan-perusahaan global. Ini membutuhkan disiplin dan waktu, tetapi perasaan menguasai bahasa yang kompleks seperti bahasa Jerman adalah hadiah yang luar biasa bagi siapa saja yang bekerja keras.</p>
-            </div>
-
-            <div class="article-content">
-                <h3>Level C2: Die philosophische Tiefe der deutschen Sprache</h3>
-                <p class="deutsch-text">Die deutsche Sprache zeichnet sich durch eine strukturelle Präzision aus, die es ermöglicht, komplexe Sachverhalte mit einer bemerkenswerten Genauigkeit zu artikulieren. Oft wird behauptet, Deutsch sei eine "schwere" Sprache, doch diese Komplexität ist genau das, was sie so ausdrucksstark macht. Von den philosophischen Werken eines Immanuel Kant bis zu den lyrischen Meisterwerken von Johann Wolfgang von Goethe – die deutsche Sprache bietet einen Zugang zu einer Tiefe des Denkens, die in anderen Sprachen oft nur schwer wiederzugeben ist. Für einen fortgeschrittenen Lerner bedeutet die Stufe C2 nicht nur die Beherrschung der Grammatik, sondern eine intuitive Verbindung zu den kulturellen Nuancen, die das Deutschsein ausmachen. Es ist ein lebenslanger Prozess des Entdeckens, der den Geist schärft und den Horizont unendlich erweitert.</p>
-                <p class="indo-text">Bahasa Jerman dicirikan oleh presisi struktural yang memungkinkan artikulasi masalah kompleks dengan akurasi yang luar biasa. Sering diklaim bahwa bahasa Jerman adalah bahasa yang "sulit", tetapi kompleksitas inilah yang membuatnya begitu ekspresif. Dari karya filosofis Immanuel Kant hingga karya liris agung Johann Wolfgang von Goethe – bahasa Jerman menawarkan akses ke kedalaman pemikiran yang seringkali sulit untuk direproduksi dalam bahasa lain. Bagi pembelajar tingkat lanjut, level C2 bukan sekadar penguasaan tata bahasa, melainkan hubungan intuitif dengan nuansa budaya yang membentuk identitas Jerman. Ini adalah proses penemuan seumur hidup yang menajamkan pikiran dan memperluas cakrawala tanpa batas.</p>
+            <div class="news-body">
+                <p class="indo-text">Ketik kata atau kalimat bahasa Jerman untuk diterjemahkan instan:</p>
+                <div class="translator-box">
+                    <div class="input-group">
+                        <input type="text" id="wordInput" placeholder="Ketik kata (cth: helfen)..." onkeypress="handleEnter(event)">
+                        <button class="translate-btn" onclick="terjemahkanGoogle()">Cari</button>
+                    </div>
+                    <div class="result-output" id="resultOutput">Hasil pencarian akan muncul di sini...</div>
+                </div>
             </div>
         </div>
 
-        <!-- Tentang Saya -->
-        <div class="card" id="tentang">
-            <h2>Tentang Pembuat</h2>
-            <p>Website ini dibangun dan dikembangkan secara mandiri oleh <strong>Leer</strong> sebagai media digital untuk mengasah konsistensi belajar serta membagikan progres penguasaan bahasa Jerman.</p>
+        <!-- Live Feed Berita Jerman Otomatis (RSS Feed dari Nachrichtenleicht / DW) -->
+        <div class="news-card">
+            <div class="news-banner">
+                <div class="news-meta">
+                    <span class="badge-level" style="background:#059669;">Live Update</span>
+                    <span class="badge-time">Otomatis Harian</span>
+                </div>
+                <div class="news-title">Berita Bahasa Jerman Terbaru (Nachrichtenleicht)</div>
+            </div>
+            <div class="news-body" id="rss-feed-container">
+                <p class="indo-text">Memuat artikel terbaru secara otomatis dari internet...</p>
+            </div>
         </div>
+
+        <div class="news-card" id="tentang">
+            <div class="news-banner">
+                <div class="news-title">Tentang Pembuat</div>
+            </div>
+            <div class="news-body">
+                <p class="indo-text">Website ini dikembangkan oleh <strong>Leer</strong> dan terhubung secara otomatis ke sumber berita bahasa Jerman agar selalu ada bahan bacaan baru setiap hari tanpa perlu coding manual.</p>
+            </div>
+        </div>
+
     </div>
 
     <footer>
-        <p>&copy; 2026 - Crafted with 💜 by LeerCode</p>
+        <p>&copy; 2026 LeerDeutsch PRO</p>
     </footer>
 
     <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
         function terjemahkanGoogle() {
             const input = document.getElementById("wordInput").value.trim();
             const output = document.getElementById("resultOutput");
             if (!input) {
-                output.innerHTML = "⚠️ Ketik sesuatu dulu dong!";
+                output.innerHTML = "⚠️ Ketik sesuatu dulu!";
                 return;
             }
             const urlTranslate = `https://translate.google.com/?sl=de&tl=id&text=${encodeURIComponent(input)}&op=translate`;
-            output.innerHTML = `🌐 Terjemahan untuk <strong>"${input}"</strong> siap:<br><br>
-            <a href="${urlTranslate}" target="_blank" style="display:inline-block; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:white; padding:10px 22px; border-radius:10px; text-decoration:none; font-weight:700; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);">🚀 Buka Google Translate</a>`;
+            output.innerHTML = `🌐 Terjemahan <strong>"${input}"</strong> siap: <a href="${urlTranslate}" target="_blank" style="color: #8b5cf6; font-weight: 700; text-decoration: underline;">Buka Google Translate</a>`;
         }
+
         function handleEnter(event) {
             if (event.key === "Enter") { terjemahkanGoogle(); }
         }
+
+        // Fungsi mengambil artikel otomatis dari RSS publik berita Jerman mudah (Nachrichtenleicht)
+        async function fetchRssFeed() {
+            const container = document.getElementById('rss-feed-container');
+            try {
+                // Menggunakan public RSS-to-JSON API untuk mengambil berita berbahasa Jerman
+                const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.nachrichtenleicht.de%2Fnachrichtenleicht-nachrichten-100.rss');
+                const data = await response.json();
+                
+                if (data.status === 'ok') {
+                    let htmlContent = '';
+                    data.items.slice(0, 5).forEach(item => {
+                        htmlContent += `
+                            <div class="auto-article-item">
+                                <a href="${item.link}" target="_blank" class="auto-article-title">📌 ${item.title}</a>
+                                <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 4px;">${item.pubDate.substring(0, 10)}</p>
+                                <p style="font-size: 0.9rem; color: #cbd5e1;">${item.description.replace(/<[^>]*>?/gm, '').substring(0, 100)}...</p>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = htmlContent;
+                } else {
+                    container.innerHTML = '<p class="indo-text">Gagal memuat artikel otomatis.</p>';
+                }
+            } catch (error) {
+                container.innerHTML = '<p class="indo-text">Terhubung ke internet diperlukan untuk memuat artikel otomatis.</p>';
+            }
+        }
+
+        // Jalankan fungsi saat halaman dibuka
+        fetchRssFeed();
     </script>
 </body>
 </html>
