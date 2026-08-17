@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeerDeutsch PRO | Portal Belajar & AI Kamus</title>
+    <title>LeerBroDeutsch | Portal Belajar Bahasa Jerman Terpadu</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #0f172a; --surface: #1e293b; --primary: #8b5cf6; --text: #f8fafc; --muted: #94a3b8; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; line-height: 1.8; }
         .top-bar { background: var(--surface); padding: 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1000; }
         .menu-toggle, .back-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; font-weight: 600; }
-        .sidebar { position: fixed; top: 0; left: -280px; width: 270px; height: 100%; background: var(--surface); z-index: 2000; transition: 0.3s; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.5); }
+        .sidebar { position: fixed; top: 0; left: -280px; width: 270px; height: 100%; background: var(--surface); z-index: 2000; transition: 0.3s; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.5); overflow-y: auto; }
         .sidebar.active { left: 0; }
         .nav-link { display: block; padding: 14px 15px; color: white; text-decoration: none; border-bottom: 1px solid #334155; cursor: pointer; font-weight: 600; border-radius: 6px; margin-bottom: 5px; }
         .nav-link:hover { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
@@ -23,11 +23,29 @@
         .post:hover h3 { color: #38bdf8; }
         .badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; background: var(--primary); color: white; font-weight: bold; display: inline-block; margin-bottom: 8px; }
         .post h3 { margin-bottom: 10px; color: #f8fafc; }
-        .link-item { display: block; background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 12px; color: #38bdf8; text-decoration: none; font-weight: 600; border: 1px solid #334155; }
+        .link-item { display: block; background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 12px; color: #38bdf8; text-decoration: none; font-weight: 600; border: 1px solid #334155; text-align: center; }
         
         .clickable-word { cursor: pointer; border-bottom: 1px dashed #a78bfa; transition: color 0.2s; }
         .clickable-word:hover { color: #a78bfa; }
-        #wordPopup { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e293b; border: 2px solid var(--primary); padding: 12px 24px; border-radius: 30px; z-index: 3000; font-weight: bold; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; }
+        
+        #wordPopup { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e293b; border: 2px solid var(--primary); padding: 15px 25px; border-radius: 16px; z-index: 3000; box-shadow: 0 10px 25px rgba(0,0,0,0.6); text-align: center; max-width: 90%; }
+        
+        .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
+        .flashcard-item { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: 0.2s; min-height: 110px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .flashcard-item:hover { border-color: var(--primary); }
+        .fc-word { font-size: 1.2rem; font-weight: bold; color: #38bdf8; margin-bottom: 5px; }
+        .fc-meaning { font-size: 1rem; color: #cbd5e1; display: none; }
+        .flashcard-item.flipped .fc-word { display: none; }
+        .flashcard-item.flipped .fc-meaning { display: block; color: #4ade80; }
+        .fc-hint { font-size: 0.75rem; color: var(--muted); margin-top: 8px; }
+        .fc-delete { position: absolute; top: 8px; right: 10px; background: none; border: none; color: #f43f5e; cursor: pointer; font-size: 0.9rem; }
+
+        /* Styling Tombol Suggested Translation */
+        .translate-box { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 20px; margin-top: 25px; }
+        .translate-btn { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .translate-btn:hover { background: #7c3aed; }
+        #translationResult { margin-top: 15px; font-size: 1.05rem; line-height: 1.8; color: #4ade80; display: none; border-top: 1px dashed #334155; padding-top: 15px; }
+
         #detailView { display: none; }
     </style>
 </head>
@@ -37,21 +55,25 @@
             <button class="menu-toggle" id="menuBtn" onclick="toggleSidebar()">☰</button>
             <button class="back-btn" id="backBtn" onclick="closeArticle()" style="display:none;">← Kembali</button>
         </div>
-        <strong style="color: #38bdf8;">LeerDeutsch PRO</strong>
+        <strong style="color: #38bdf8;">LeerBroDeutsch</strong>
         <div style="width: 24px;"></div>
     </div>
 
-    <!-- Sidebar dengan Menu AI Kamus yang Diperbarui -->
     <div class="sidebar" id="sidebar">
         <h3 style="margin-bottom:20px; color:#38bdf8;">Menu Utama</h3>
         <div class="nav-link" onclick="showPage('artikel-page'); toggleSidebar();">✍️ Beranda & Feed Artikel</div>
         <div class="nav-link" onclick="showPage('berita-page'); toggleSidebar();">🌐 Berita & Referensi</div>
         <div class="nav-link" onclick="showPage('ai-kamus-page'); toggleSidebar();">🤖 AI Kamus Jerman ⇄ Indonesia</div>
+        <div class="nav-link" onclick="showPage('flashcard-page'); toggleSidebar(); renderFlashcards();">📚 Flashcard Kosakata (<span id="fcCount">0</span>)</div>
+        <div class="nav-link" onclick="showPage('donasi-page'); toggleSidebar();">🤝 Dukung / Donasi QRIS</div>
         <div class="nav-link" onclick="showPage('tentang-page'); toggleSidebar();">👤 Tentang & Visi Misi</div>
         <div class="nav-link" onclick="toggleSidebar()" style="color:#f43f5e; border-bottom:none; margin-top:20px;">✕ Tutup Menu</div>
     </div>
 
-    <div id="wordPopup">Klik kata Jerman di teks untuk melihat arti</div>
+    <div id="wordPopup">
+        <div id="popupText" style="margin-bottom: 10px; font-weight: bold;"></div>
+        <button id="popupSaveBtn" style="background: var(--primary); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; display: none;" onclick="saveCurrentWordToFlashcard()">+ Simpan ke Flashcard</button>
+    </div>
 
     <div class="container" style="max-width: 800px; margin: auto; padding: 20px;">
 
@@ -77,6 +99,12 @@
                 <span class="badge" id="detailBadge"></span>
                 <h2 id="detailTitle" style="color: #38bdf8; margin: 10px 0 20px 0;"></h2>
                 <div id="detailContent" style="font-size: 1.1rem; line-height: 2; color: #cbd5e1;"></div>
+                
+                <!-- FITUR SUGGESTED TRANSLATION -->
+                <div class="translate-box">
+                    <button class="translate-btn" onclick="loadSuggestedTranslation()">💡 Tampilkan Suggested Translation (ID)</button>
+                    <div id="translationResult"></div>
+                </div>
             </div>
         </div>
 
@@ -91,7 +119,7 @@
             </div>
         </div>
 
-        <!-- HALAMAN AI KAMUS DUA ARAH (Jerman <-> Indonesia) -->
+        <!-- HALAMAN AI KAMUS -->
         <div id="ai-kamus-page" class="page">
             <div class="card">
                 <h2>🤖 AI Kamus Jerman ⇄ Indonesia</h2>
@@ -113,18 +141,55 @@
             </div>
         </div>
 
+        <!-- HALAMAN FLASHCARD KOSAKATA -->
+        <div id="flashcard-page" class="page">
+            <div class="card">
+                <h2>📚 Flashcard Kosakata Anda</h2>
+                <p style="color:var(--muted); margin-bottom:10px;">Daftar kata sulit yang Anda simpan dari bacaan. Klik kartu untuk melihat arti bahasa Indonesianya!</p>
+                <div id="flashcardContainer" class="flashcard-grid"></div>
+            </div>
+        </div>
+
+        <!-- HALAMAN DONASI -->
+        <div id="donasi-page" class="page">
+            <div class="card" style="text-align: center; padding: 30px 20px;">
+                <h2 style="color: #38bdf8; margin-bottom: 15px;">🤝 Dukung Perkembangan LeerBroDeutsch</h2>
+                <p style="color: var(--muted); margin-bottom: 25px; line-height: 1.6;">
+                    Terima kasih banyak sudah menggunakan portal belajar ini! Jika website ini membantu perjalanan belajar bahasa Jerman Anda, Anda dapat memberikan dukungan atau saweran seikhlasnya secara aman melalui QRIS atau platform resmi di bawah ini:
+                </p>
+
+                <div style="background: #0f172a; border: 2px dashed var(--primary); padding: 20px; border-radius: 12px; display: inline-block; margin-bottom: 25px; max-width: 280px; width: 100%;">
+                    <div style="font-size: 0.9rem; font-weight: bold; color: #a78bfa; margin-bottom: 10px;">SCAN QRIS UTAMA</div>
+                    <div style="background: white; padding: 15px; border-radius: 8px; display: flex; justify-content: center; align-items: center; height: 180px; color: #0f172a; font-weight: bold; font-size: 0.9rem;">
+                        <img src="qris-donasi.png" style="width:100%; height:auto; border-radius:8px;" alt="QRIS Donasi LeerBroDeutsch">
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--muted); margin-top: 10px;">Dapat di-scan via BCA, Mandiri, GoPay, OVO, DANA, dll</p>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: auto;">
+                    <a href="https://saweria.co/" target="_blank" class="link-item" style="background: #7c3aed; color: white; padding: 14px; border-radius: 8px; margin-bottom: 0;">
+                        💖 Dukung via Saweria
+                    </a>
+                    
+                    <a href="https://trakteer.id/" target="_blank" class="link-item" style="background: #1e293b; border: 1px solid #38bdf8; color: #38bdf8; padding: 14px; border-radius: 8px; margin-bottom: 0;">
+                        ☕ Traktir Kopi via Trakteer
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- HALAMAN TENTANG -->
         <div id="tentang-page" class="page">
             <div class="card">
                 <h2>👤 Tentang Pembuat & Visi Misi</h2>
-                <p>Halo! Saya <strong>Leer</strong>, pembuat dari <strong>LeerDeutsch PRO</strong>. Website ini dirancang khusus sebagai pusat media digital mandiri untuk mendokumentasikan proses belajar bahasa Jerman.</p>
+                <p>Halo! Saya <strong>Leer</strong>, pembuat dari <strong>LeerBroDeutsch</strong>. Website ini dirancang khusus sebagai pusat media digital mandiri untuk mendokumentasikan proses belajar bahasa Jerman.</p>
                 <h4 style="color:#38bdf8; margin-top:20px;">🎯 Visi</h4>
                 <p><em>"Menjadi ekosistem digital terdepan yang mendefinisikan ulang cara generasi muda menguasai bahasa Jerman secara mandiri—menggabungkan kedalaman materi, estetika modern, dan teknologi untuk mencetak talenta global yang kompetitif."</em></p>
                 <h4 style="color:#38bdf8; margin-top:20px;">🚀 Misi</h4>
                 <ul style="margin-left: 20px; color: #cbd5e1; margin-top: 5px;">
                     <li>Menyediakan kurasi 24 artikel terstruktur dari level A1 sampai C2.</li>
-                    <li>Fitur interaktif AI Kamus dua arah dan klik kata instan.</li>
-                    <li>Membangun ekosistem belajar mandiri yang bebas gangguan iklan.</li>
+                    <li>Fitur interaktif AI Kamus, klik kata, dan Flashcard kosakata.</li>
+                    <li>Membangun ekosistem belajar mandiri yang komprehensif.</li>
                 </ul>
             </div>
         </div>
@@ -132,7 +197,6 @@
     </div>
 
     <script>
-        // Database Lengkap 24 Artikel (A1 sampai C2)
         const articles = [
             { level: 'A1', title: '1. Mein täglicher Weg zur Arbeit', text: 'Ich heiße Leer und wohne in Bekasi. Jeden Morgen wache ich um fünf Uhr auf. Zuerst trinke ich ein großes Glas Wasser und mache ein bisschen Sport. Danach koche ich einen starken Kaffee und bereite mein Frühstück vor. Um sieben Uhr verlasse ich das Haus. Der Weg zur Arbeit ist nicht sehr lang, aber morgens gibt es oft viel Verkehr auf der Straße. Ich fahre mit großer Vorsicht. Um acht Uhr beginne ich mit meiner Arbeit als Logistik-Operator. Die Aufgaben sind manchmal anstrengend, aber ich lerne dabei jeden Tag etwas Neues und Nützliches für meine Zukunft kennen.' },
             { level: 'A1', title: '2. Meine kleine Familie', text: 'Meine Familie ist nicht sehr groß, aber wir sind sehr glücklich. Meine Eltern wohnen in einer ruhigen Gegend. Mein Vater arbeitet als Mechaniker und meine Mutter kümmert sich um den Haushalt. Am Wochenende besuchen wir uns oft zusammen. Wir kochen traditionelle Gerichte, sprechen über unsere Erlebnisse der Woche und trinken gemeinsam Tee. Ich liebe diese Momente der Ruhe sehr, weil sie mir viel Kraft für die kommenden Arbeitstage geben.' },
@@ -166,6 +230,9 @@
         ];
 
         let currentLangPair = 'de|id';
+        let flashcards = JSON.parse(localStorage.getItem('leerbro_flashcards')) || [];
+        let activeWordData = { de: '', id: '' };
+        let activeArticleText = '';
 
         function setLangPair(pair, btn) {
             currentLangPair = pair;
@@ -187,7 +254,7 @@
             if(!query) return;
 
             resBox.style.display = 'block';
-            resText.innerHTML = "🤖 AI sedang menganalisis dan menerjemahkan...";
+            resText.innerHTML = "🤖 AI sedang menganalisis und menerjemahkan...";
 
             fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(query)}&langpair=${currentLangPair}`)
                 .then(res => res.json())
@@ -225,9 +292,13 @@
 
         function openDetail(index) {
             const art = articles[index];
+            activeArticleText = art.text;
             document.getElementById('detailBadge').innerText = art.level;
             document.getElementById('detailTitle').innerText = art.title;
             
+            document.getElementById('translationResult').style.display = 'none';
+            document.getElementById('translationResult').innerHTML = '';
+
             let words = art.text.split(' ');
             let interactiveHTML = words.map(w => {
                 let cleanWord = w.replace(/[.,\/\/#!$%\^&\*;:{}=\-_`~()„“"«»]/g,"");
@@ -243,6 +314,22 @@
             window.scrollTo(0,0);
         }
 
+        function loadSuggestedTranslation() {
+            let resBox = document.getElementById('translationResult');
+            resBox.style.display = 'block';
+            resBox.innerHTML = "🤖 AI sedang menyusun suggested translation ke Bahasa Indonesia...";
+
+            fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(activeArticleText)}&langpair=de|id`)
+                .then(res => res.json())
+                .then(data => {
+                    let translation = data.responseData.translatedText;
+                    resBox.innerHTML = `<strong>🇮🇩 Suggested Translation:</strong><br><br>${translation}`;
+                })
+                .catch(() => {
+                    resBox.innerHTML = "⚠️ Gagal memuat terjemahan. Periksa koneksi internet Anda.";
+                });
+        }
+
         function closeArticle() {
             document.getElementById('listView').style.display = 'block';
             document.getElementById('detailView').style.display = 'none';
@@ -252,24 +339,74 @@
 
         function translateWord(word) {
             const popup = document.getElementById('wordPopup');
+            const popupText = document.getElementById('popupText');
+            const saveBtn = document.getElementById('popupSaveBtn');
             if(!word) return;
             
-            popup.innerHTML = `🤖 AI menerjemahkan: <b>${word}</b>...`;
+            popupText.innerHTML = `🤖 AI menerjemahkan: <b>${word}</b>...`;
+            saveBtn.style.display = 'none';
             popup.style.display = 'block';
 
             fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=de|id`)
                 .then(res => res.json())
                 .then(data => {
                     let translation = data.responseData.translatedText;
-                    popup.innerHTML = `🇩🇪 <b>${word}</b> = 🇮🇩 <span style="color:#38bdf8;">${translation}</span>`;
+                    activeWordData = { de: word, id: translation };
+                    popupText.innerHTML = `🇩🇪 <b>${word}</b> = 🇮🇩 <span style="color:#38bdf8;">${translation}</span>`;
+                    saveBtn.style.display = 'inline-block';
                 })
                 .catch(() => {
-                    popup.innerHTML = `🇩🇪 <b>${word}</b> (Gagal memuat)`;
+                    popupText.innerHTML = `🇩🇪 <b>${word}</b> (Gagal memuat)`;
                 });
 
             setTimeout(() => {
                 popup.style.display = 'none';
-            }, 4000);
+            }, 6000);
+        }
+
+        function saveCurrentWordToFlashcard() {
+            if(!activeWordData.de) return;
+            let exists = flashcards.some(item => item.de.toLowerCase() === activeWordData.de.toLowerCase());
+            if(!exists) {
+                flashcards.push(activeWordData);
+                localStorage.setItem('leerbro_flashcards', JSON.stringify(flashcards));
+                updateFlashcardCount();
+                alert(`Berhasil menyimpan "${activeWordData.de}" ke Flashcard!`);
+            } else {
+                alert(`Kata "${activeWordData.de}" sudah ada di Flashcard Anda.`);
+            }
+            document.getElementById('wordPopup').style.display = 'none';
+        }
+
+        function updateFlashcardCount() {
+            document.getElementById('fcCount').innerText = flashcards.length;
+        }
+
+        function renderFlashcards() {
+            let container = document.getElementById('flashcardContainer');
+            if(flashcards.length === 0) {
+                container.innerHTML = '<p style="color: var(--muted); grid-column: 1/-1; text-align: center;">Belum ada kosakata di flashcard. Yuk baca artikel lalu klik kata untuk menyimpannya!</p>';
+                return;
+            }
+            let html = '';
+            flashcards.forEach((fc, index) => {
+                html += `
+                    <div class="flashcard-item" onclick="this.classList.toggle('flipped')">
+                        <button class="fc-delete" onclick="event.stopPropagation(); deleteFlashcard(${index})" title="Hapus">✕</button>
+                        <div class="fc-word">🇩🇪 ${fc.de}</div>
+                        <div class="fc-meaning">🇮🇩 ${fc.id}</div>
+                        <div class="fc-hint">Klik untuk membalik</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function deleteFlashcard(index) {
+            flashcards.splice(index, 1);
+            localStorage.setItem('leerbro_flashcards', JSON.stringify(flashcards));
+            updateFlashcardCount();
+            renderFlashcards();
         }
 
         function toggleSidebar() {
@@ -283,6 +420,7 @@
         }
 
         renderList('all');
+        updateFlashcardCount();
     </script>
 </body>
 </html>
