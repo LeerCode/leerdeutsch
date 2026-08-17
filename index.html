@@ -3,380 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeerDeutsch PRO | Portal Belajar & Berita Jerman</title>
+    <title>LeerDeutsch PRO | Portal Belajar Lengkap</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0f172a; --surface: #1e293b; --card-bg: #1e293b; --primary: #8b5cf6; --text-main: #f8fafc; --text-muted: #94a3b8; --border: #334155; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.6; }
-
-        .top-bar { background-color: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .logo-title { font-weight: 700; font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 6px; }
-        .logo-title span { background: var(--primary); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
-        .back-btn { background: none; border: none; color: #38bdf8; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: none; }
-
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background-color: var(--surface); border-right: 1px solid var(--border); z-index: 2000; transition: left 0.3s ease; padding: 20px; box-shadow: 5px 0 15px rgba(0,0,0,0.5); overflow-y: auto; }
+        :root { --bg: #0f172a; --surface: #1e293b; --primary: #8b5cf6; --text: #f8fafc; --muted: #94a3b8; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; line-height: 1.8; }
+        .top-bar { background: var(--surface); padding: 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1000; }
+        .menu-toggle, .back-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; font-weight: 600; }
+        .sidebar { position: fixed; top: 0; left: -280px; width: 260px; height: 100%; background: var(--surface); z-index: 2000; transition: 0.3s; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.5); }
         .sidebar.active { left: 0; }
-        .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-        .sidebar-close { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
-        .nav-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 500; padding: 10px 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.2s; }
-        .nav-links a:hover { background-color: rgba(139, 92, 246, 0.2); color: var(--primary); }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1500; display: none; }
-        .overlay.active { display: block; }
-
-        .container { max-width: 800px; margin: 20px auto; padding: 0 16px; }
-        .section-box { display: none; }
-        .section-box.active { display: block; }
-
-        .filter-container { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; }
-        .filter-btn { padding: 6px 14px; border-radius: 20px; border: none; background: #334155; color: white; cursor: pointer; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+        .nav-link { display: block; padding: 14px 15px; color: white; text-decoration: none; border-bottom: 1px solid #334155; cursor: pointer; font-weight: 600; border-radius: 6px; margin-bottom: 5px; }
+        .nav-link:hover { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+        .page { display: none; padding: 20px; max-width: 800px; margin: auto; }
+        .page.active { display: block; }
+        .card { background: var(--surface); border-radius: 12px; padding: 25px; margin-bottom: 20px; border: 1px solid #334155; }
+        .filter-btn { padding: 8px 14px; border-radius: 20px; border: none; background: #334155; color: white; cursor: pointer; margin-right: 5px; margin-bottom: 8px; font-weight: 600; }
         .filter-btn.active { background: var(--primary); }
-
-        .news-card { background-color: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; cursor: pointer; transition: border-color 0.2s; }
-        .news-card:hover { border-color: var(--primary); }
-        .news-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; font-size: 0.75rem; }
-        .badge-level { background: #7c3aed; color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
-        .badge-time { background: #334155; color: #cbd5e1; padding: 2px 6px; border-radius: 4px; }
-        .news-title { font-size: 1.15rem; font-weight: 700; color: #fff; }
-
-        .article-view { display: none; background: var(--surface); border-radius: 12px; padding: 24px; border: 1px solid var(--border); }
-        .article-view.active { display: block; }
+        .post { border-bottom: 1px solid #334155; padding: 25px 0; cursor: pointer; }
+        .post:hover h3 { color: #38bdf8; }
+        .badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; background: var(--primary); color: white; font-weight: bold; display: inline-block; margin-bottom: 8px; }
+        .post h3 { margin-bottom: 10px; color: #f8fafc; }
+        .link-item { display: block; background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 12px; color: #38bdf8; text-decoration: none; font-weight: 600; border: 1px solid #334155; }
         
-        .translate-control { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border); }
-        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .3s; border-radius: 26px; }
-        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(24px); }
-
-        .sentence-block { margin-bottom: 16px; }
-        .de-text { font-size: 1.05rem; color: #f1f5f9; margin-bottom: 4px; }
-        .id-translation { 
-            font-size: 0.9rem; 
-            color: #d97706; 
-            background: rgba(217, 119, 6, 0.1); 
-            border-left: 3px solid #d97706; 
-            padding: 6px 10px; 
-            border-radius: 4px; 
-            display: none; 
-            margin-top: 4px;
-        }
-        .id-translation.show { display: block; }
-
-        .quiz-box { margin-top: 30px; background: #0f172a; padding: 20px; border-radius: 10px; border: 1px solid var(--border); }
-        .quiz-box h4 { color: #38bdf8; margin-bottom: 12px; }
-        .quiz-opt { display: block; background: #1e293b; padding: 10px 14px; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid var(--border); }
-        .quiz-opt:hover { border-color: var(--primary); }
-
-        .card { background-color: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
-        .link-item { display: block; background: #0f172a; padding: 14px; border-radius: 8px; margin-bottom: 10px; color: #38bdf8; text-decoration: none; font-weight: 600; border: 1px solid var(--border); }
+        /* Interactive Word Click & Popup */
+        .clickable-word { cursor: pointer; border-bottom: 1px dashed #a78bfa; transition: color 0.2s; }
+        .clickable-word:hover { color: #a78bfa; }
+        #wordPopup { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e293b; border: 2px solid var(--primary); padding: 12px 24px; border-radius: 30px; z-index: 3000; font-weight: bold; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; }
         
-        footer { text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 40px; background: var(--surface); }
+        /* Detail Article Reading View */
+        #detailView { display: none; }
     </style>
 </head>
 <body>
-
     <div class="top-bar">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <button class="menu-toggle" id="menuBtn" onclick="toggleSidebar()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">☰</button>
-            <button class="back-btn" id="backBtn" onclick="backToFeed()">← Kembali</button>
+        <div>
+            <button class="menu-toggle" id="menuBtn" onclick="toggleSidebar()">☰</button>
+            <button class="back-btn" id="backBtn" onclick="closeArticle()" style="display:none;">← Kembali</button>
         </div>
-        <div class="logo-title">LeerDeutsch <span>PRO</span></div>
+        <strong style="color: #38bdf8;">LeerDeutsch PRO</strong>
         <div style="width: 24px;"></div>
     </div>
 
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <!-- Sidebar Menu -->
     <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3>Menu Utama</h3>
-            <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
-        </div>
-        <ul class="nav-links">
-            <li><a onclick="toggleSidebar(); showSection('feedSection');">📰 Beranda & Feed Artikel</a></li>
-            <li><a onclick="toggleSidebar(); showSection('refSection');">🌐 Berita & Referensi</a></li>
-            <li><a onclick="toggleSidebar(); showSection('bookmarkSection');">⭐ Artikel Favorit (<span id="bmCount">0</span>)</a></li>
-            <li><a href="https://translate.google.com/?sl=de&tl=id" target="_blank">🔍 Kamus Google Translate</a></li>
-            <li><a onclick="toggleSidebar(); showSection('aboutSection');">👤 Tentang & Visi Misi</a></li>
-        </ul>
+        <h3 style="margin-bottom:20px; color:#38bdf8;">Menu Utama</h3>
+        <div class="nav-link" onclick="showPage('artikel-page'); toggleSidebar();">✍️ Artikel (A1-C2)</div>
+        <div class="nav-link" onclick="showPage('berita-page'); toggleSidebar();">🌐 Berita Referensi</div>
+        <div class="nav-link" onclick="showPage('kamus-page'); toggleSidebar();">🔍 Kamus Dua Arah</div>
+        <div class="nav-link" onclick="showPage('tentang-page'); toggleSidebar();">👤 Tentang & Visi Misi</div>
+        <div class="nav-link" onclick="toggleSidebar()" style="color:#f43f5e; border-bottom:none; margin-top:20px;">✕ Tutup Menu</div>
     </div>
 
-    <div class="container">
-        
-        <div id="feedSection" class="section-box active">
-            <h2 style="margin-bottom: 15px; font-size: 1.2rem; color: var(--text-muted);">Daftar Artikel & Berita Terbaru</h2>
-            
-            <div class="filter-container">
-                <button class="filter-btn active" onclick="filterFeed('all', this)">All</button>
-                <button class="filter-btn" onclick="filterFeed('A1', this)">A1</button>
-                <button class="filter-btn" onclick="filterFeed('A2', this)">A2</button>
-                <button class="filter-btn" onclick="filterFeed('B1', this)">B1</button>
-                <button class="filter-btn" onclick="filterFeed('B2', this)">B2</button>
-                <button class="filter-btn" onclick="filterFeed('C1', this)">C1</button>
-                <button class="filter-btn" onclick="filterFeed('C2', this)">C2</button>
+    <!-- Popup Terjemahan Kata -->
+    <div id="wordPopup">Klik kata Jerman di teks untuk melihat arti</div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <div class="container" style="max-width: 800px; margin: auto; padding: 20px;">
+
+        <!-- HALAMAN ARTIKEL -->
+        <div id="artikel-page" class="page active">
+            <div id="listView">
+                <div class="card">
+                    <h2>✍️ Library Artikel Lengkap</h2>
+                    <p style="color:var(--muted); margin-bottom:15px;">Pilih level kemampuan atau klik artikel untuk membaca interaktif:</p>
+                    <button class="filter-btn active" onclick="filterLevel('all', this)">All</button>
+                    <button class="filter-btn" onclick="filterLevel('A1', this)">A1</button>
+                    <button class="filter-btn" onclick="filterLevel('A2', this)">A2</button>
+                    <button class="filter-btn" onclick="filterLevel('B1', this)">B1</button>
+                    <button class="filter-btn" onclick="filterLevel('B2', this)">B2</button>
+                    <button class="filter-btn" onclick="filterLevel('C1', this)">C1</button>
+                    <button class="filter-btn" onclick="filterLevel('C2', this)">C2</button>
+                </div>
+
+                <div class="card" id="post-container">
+                    <!-- Artikel dimuat dinamis -->
+                </div>
             </div>
 
-            <div id="feedList"></div>
-        </div>
-
-        <div id="articleView" class="article-view">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h2 id="articleTitle" style="color: #38bdf8; font-size: 1.3rem;"></h2>
-                <button id="bmBtn" onclick="toggleBookmarkCurrent()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;" title="Simpan Artikel">⭐</button>
-            </div>
-            
-            <div class="translate-control">
-                <span style="font-weight: 600; font-size: 0.95rem;">Suggested translation</span>
-                <label class="switch">
-                    <input type="checkbox" id="translateToggle" onchange="toggleTranslation(this)">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div id="articleContent"></div>
-
-            <div class="quiz-box">
-                <h4>💡 Kuis Pemahaman Cepat</h4>
-                <p id="quizQuestion" style="margin-bottom: 10px; font-weight: 600;"></p>
-                <div id="quizOptions"></div>
-                <p id="quizFeedback" style="margin-top: 10px; font-weight: bold;"></p>
+            <!-- Tampilan Detail Baca Artikel -->
+            <div id="detailView" class="card">
+                <span class="badge" id="detailBadge"></span>
+                <h2 id="detailTitle" style="color: #38bdf8; margin: 10px 0 20px 0;"></h2>
+                <div id="detailContent" style="font-size: 1.1rem; line-height: 2; color: #cbd5e1;"></div>
             </div>
         </div>
 
-        <div id="refSection" class="section-box">
+        <!-- HALAMAN BERITA REFERENSI -->
+        <div id="berita-page" class="page">
             <div class="card">
-                <h2>🌐 Berita & Sumber Referensi Eksternal</h2>
-                <p style="color:var(--text-muted); margin-bottom:15px; font-size:0.9rem;">Portal resmi Jerman untuk latihan membaca tambahan:</p>
+                <h2>🌐 Berita Referensi Eksternal</h2>
+                <p style="color:var(--muted); margin-bottom:15px;">Portal berita resmi Jerman:</p>
                 <a href="https://www.nachrichtenleicht.de/" target="_blank" class="link-item">📌 Nachrichtenleicht (Berita Mudah A2-B1)</a>
                 <a href="https://learngerman.dw.com/de/overview" target="_blank" class="link-item">📌 DW Learn German (Media & Audio)</a>
-                <a href="https://www.tagesschau.de/" target="_blank" class="link-item">📌 Tagesschau (Berita Utama Mahir)</a>
+                <a href="https://www.tagesschau.de/" target="_blank" class="link-item">📌 Tagesschau (Berita Utama Tingkat Mahir)</a>
             </div>
         </div>
 
-        <div id="bookmarkSection" class="section-box">
+        <!-- HALAMAN KAMUS DUA ARAH (Jerman <-> Indonesia) -->
+        <div id="kamus-page" class="page">
             <div class="card">
-                <h2>⭐ Artikel Favorit Anda</h2>
-                <p style="color:var(--text-muted); margin-bottom:15px; font-size:0.9rem;">Daftar artikel yang Anda simpan untuk dibaca kembali:</p>
-                <div id="bookmarkList">
-                    <p style="color: var(--text-muted);">Belum ada artikel yang disimpan.</p>
+                <h2>🔍 Kamus & Terjemahan Dua Arah</h2>
+                <p style="color:var(--muted); margin-bottom:15px;">Pilih arah terjemahan dan ketik kata yang ingin dicari:</p>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <button id="btnDeId" class="filter-btn active" onclick="setLangPair('de|id', this)">Jerman ➔ Indonesia</button>
+                    <button id="btnIdDe" class="filter-btn" onclick="setLangPair('id|de', this)">Indonesia ➔ Jerman</button>
+                </div>
+
+                <input type="text" id="customWordInput" placeholder="Ketik kata di sini..." style="width:100%; padding:12px; background:#0f172a; color:white; border:1px solid #334155; border-radius:6px; box-sizing:border-box;">
+                
+                <button onclick="cariKamus()" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:6px; margin-top:12px; font-weight:bold; cursor:pointer;">Terjemahkan Sekarang</button>
+                
+                <div id="kamusResult" style="margin-top: 20px; padding: 15px; background: #0f172a; border-radius: 8px; border: 1px solid #334155; display: none; font-size: 1.1rem;">
+                    <strong>Hasil:</strong> <span id="resultText" style="color: #38bdf8;"></span>
                 </div>
             </div>
         </div>
 
-        <div id="aboutSection" class="section-box">
+        <!-- HALAMAN TENTANG & VISI MISI -->
+        <div id="tentang-page" class="page">
             <div class="card">
                 <h2>👤 Tentang Pembuat & Visi Misi</h2>
-                <p style="margin-top:10px; color:#cbd5e1;">Halo! Saya <strong>Leer</strong>, kreator di balik <strong>LeerDeutsch PRO</strong>. Portal ini didedikasikan untuk Gen Z dan siapa saja yang ingin menguasai bahasa Jerman secara mandiri, praktis, dan berkelas.</p>
-                
+                <p>Halo! Saya <strong>Leer</strong>, pembuat dari <strong>LeerDeutsch PRO</strong>. Website ini dirancang khusus sebagai pusat media digital mandiri untuk mendokumentasikan proses belajar bahasa Jerman.</p>
                 <h4 style="color:#38bdf8; margin-top:20px;">🎯 Visi</h4>
-                <p style="color:#cbd5e1; font-style:italic;">"Menjadi ekosistem digital terdepan yang mendefinisikan ulang cara generasi muda menguasai bahasa Jerman secara mandiri—menggabungkan kedalaman materi, estetika modern, dan teknologi untuk mencetak talenta global yang kompetitif."</p>
-                
+                <p><em>"Menjadi ekosistem digital terdepan yang mendefinisikan ulang cara generasi muda menguasai bahasa Jerman secara mandiri—menggabungkan kedalaman materi, estetika modern, dan teknologi untuk mencetak talenta global yang kompetitif."</em></p>
                 <h4 style="color:#38bdf8; margin-top:20px;">🚀 Misi</h4>
-                <ul style="margin-left:20px; color:#cbd5e1; margin-top:5px; display:flex; flex-direction:column; gap:6px;">
-                    <li>Belajar Tanpa Batas: Menyediakan kurasi materi terstruktur dari level A1 hingga C2.</li>
-                    <li>Eksplorasi Berbasis Teknologi: Integrasi terjemahan instan untuk pengalaman belajar tanpa hambatan.</li>
-                    <li>Kualitas Tanpa Kompromi: Konten mendalam, berbobot, dan ramah pengguna.</li>
+                <ul style="margin-left: 20px; color: #cbd5e1; margin-top: 5px;">
+                    <li>Menyediakan kurasi artikel terstruktur dari level A1 sampai C2.</li>
+                    <li>Fitur interaktif klik kata dan terjemahan dua arah instan.</li>
+                    <li>Membangun ekosistem belajar mandiri yang bebas gangguan iklan.</li>
                 </ul>
             </div>
         </div>
 
     </div>
 
-    <footer>
-        <p>&copy; 2026 LeerDeutsch PRO</p>
-    </footer>
-
     <script>
-        const databaseArtikel = {
-            'artikel1': {
-                level: 'A1',
-                time: '1 menit',
-                title: 'Kapitel 2: Ein gemeiner Trick am Teich',
-                sentences: [
-                    { de: "Und tatsächlich begann sich Tẩms Leben am nächsten Morgen zu verändern.", id: "Dan sungguh, kehidupan Tắm mulai berubah keesokan paginya." },
-                    { de: "Gemeinsam mit Cám ging sie zum Teich.", id: "Bersama dengan Cám, dia pergi ke kolam." },
-                    { de: "Ihre Stiefmutter hatte gesagt: ‚Wer mehr Fische fängt, bekommt ein rotes Kleid.‘", id: "Ibu tirinya telah berkata: 'Siapa pun yang menangkap lebih banyak ikan akan mendapatkan gaun merah.'" },
-                    { de: "Tắm arbeitete fleißig und bald war ihr Korb fast voll.", id: "Tắm bekerja dengan rajin dan segera keranjangnya hampir penuh." }
-                ],
-                quiz: {
-                    q: "Wer bekam ein rotes Kleid nach der Regel der Stiefmutter?",
-                    options: ["Cám", "Tắm", "Der Vater"],
-                    answer: 1
-                }
-            },
-            'artikel2': {
-                level: 'B1',
-                time: '2 menit',
-                title: 'Warum ist Deutschlernen lohnenswert?',
-                sentences: [
-                    { de: "Viele Menschen fragen sich, warum man heute noch Deutsch lernen sollte.", id: "Banyak orang bertanya-tanya mengapa seseorang harus belajar bahasa Jerman hari ini." },
-                    { de: "Die Antwort ist einfach: Deutsch ist die Sprache von Denkern und Dichtern.", id: "Jawabannya sederhana: Bahasa Jerman adalah bahasa para pemikir dan penyair." },
-                    { de: "Durch das Erlernen öffnen sich neue Türen in Technik und Wissenschaft.", id: "Dengan mempelajarinya, pintu-pintu baru terbuka di bidang teknik dan sains." }
-                ],
-                quiz: {
-                    q: "Welche Türen öffnen sich durch das Erlernen der deutschen Sprache?",
-                    options: ["In Mode und Kunst", "In Technik und Wissenschaft", "Nur in der Freizeit"],
-                    answer: 1
-                }
+        // Database 24 Artikel Lengkap
+        const articles = [
+            { level: 'A1', title: '1. Mein täglicher Weg zur Arbeit', text: 'Ich heiße Leer und wohne in Bekasi. Jeden Morgen wache ich um fünf Uhr auf. Zuerst trinke ich ein großes Glas Wasser und mache ein bisschen Sport. Danach koche ich einen starken Kaffee und bereite mein Frühstück vor. Um sieben Uhr verlasse ich das Haus. Der Weg zur Arbeit ist nicht sehr lang, aber morgens gibt es oft viel Verkehr auf der Straße. Ich fahre mit großer Vorsicht. Um acht Uhr beginne ich mit meiner Arbeit als Logistik-Operator. Die Aufgaben sind manchmal anstrengend, aber ich lerne dabei jeden Tag etwas Neues und Nützliches für meine Zukunft kennen.' },
+            { level: 'A1', title: '2. Meine kleine Familie', text: 'Meine Familie ist nicht sehr groß, aber wir sind sehr glücklich. Meine Eltern wohnen in einer ruhigen Gegend. Mein Vater arbeitet als Mechaniker und meine Mutter kümmert sich um den Haushalt. Am Wochenende besuchen wir uns oft zusammen. Wir kochen traditionelle Gerichte, sprechen über unsere Erlebnisse der Woche und trinken gemeinsam Tee. Ich liebe diese Momente der Ruhe sehr, weil sie mir viel Kraft für die kommenden Arbeitstage geben.' },
+            { level: 'A1', title: '3. Mein Zimmer und meine Hobbys', text: 'Mein Zimmer ist einfach, aber sehr gemütlich eingerichtet. An der Wand hängt eine Weltkarte, und auf dem Tisch stehen mein Laptop sowie einige Bücher über das Lernen von Sprachen. In meiner Freizeit lese ich sehr gerne spannende Romane oder höre ruhige Musik. Manchmal jogge ich abends im Park, wenn das Wetter schön ist. Sport hilft mir dabei, den Kopf nach einem langen Arbeitstag frei zu bekommen und neue Energie zu tanken.' },
+            { level: 'A1', title: '4. Einkaufen auf dem Markt', text: 'Jeden Samstag gehe ich früh morgens auf den traditionellen Markt in meiner Nähe. Dort kaufe ich frisches Gemüse, süße Früchte und manchmal auch traditionelle Snacks. Die Verkäufer sind immer sehr freundlich und hilfsbereit. Ich versuche oft, auf Deutsch oder mit einfachen Wörtern zu kommunizieren, um meine Sprachpraxis zu verbessern. Das Einkaufen auf dem Markt macht mir viel mehr Freude als im großen Supermarkt, weil die Atmosphäre hier viel lebendiger ist.' },
+            
+            { level: 'A2', title: '1. Meine Reise nach Jakarta', text: 'Letzten Monat habe ich beschlossen, einen Tag in Jakarta zu verbringen. Ich bin früh am Morgen mit dem Zug gefahren, weil die Straßen auf der Autobahn oft verstopft sind. In Jakarta habe ich das historische Museum besucht und viele interessante Dinge über die Geschichte des Landes gelernt. Zum Mittagessen habe ich ein kleines, traditionelles Restaurant gefunden und dort ein sehr leckeres Gericht probiert. Am Abend war ich ziemlich müde, aber die Reise hat sich absolut gelohnt.' },
+            { level: 'A2', title: '2. Meine Kocherfahrung am Wochenende', text: 'Kochen ist für mich nicht nur eine Notwendigkeit, sondern mittlerweile ein echtes Hobby geworden. Früher habe ich fast nie selbst gekocht und oft fertiges Essen gekauft. Aber vor einigen Wochen habe ich angefangen, komplexe Rezepte aus dem Internet auszuprobieren. Letzten Sonntag habe ich eine traditionelle Suppe mit viel Gemüse und Hühnchen gekocht. Es hat überraschend gut geschmeckt, und meine Familie war begeistert. Nächste Woche möchte ich versuchen, einen deutschen Kuchen zu backen.' },
+            { level: 'A2', title: '3. Pläne für den nächsten Urlaub', text: 'Ich denke schon seit Wochen über meinen nächsten Urlaub nach. Ich würde gerne für ein paar Tage ans Meer reisen, weil ich das Rauschen der Wellen und die frische Brise liebe. Allerdings muss ich zuerst meinen Arbeitsplan prüfen, damit ich genügend freie Tage bekomme. Mein Ziel ist es, ein ruhiges Hotel zu finden, wo ich fernab vom großen Stadtlärm entspannen, lange Spaziergänge am Strand machen und endlich ein dickes Buch zu Ende lesen kann.' },
+            { level: 'A2', title: '4. Die Bedeutung des Internets in unserem Leben', text: 'Das Internet hat unseren Alltag in den letzten Jahren komplett verändert. Früher mussten wir zur Post gehen, Briefe schreiben oder in Bibliotheken lange nach Informationen suchen. Heute finden wir alles innerhalb von wenigen Sekunden auf dem Bildschirm unseres Smartphones. Wir können mit Freunden auf der ganzen Welt chatten, online einkaufen und Filme streamen. Trotz der vielen Vorteile müssen wir jedoch aufpassen, dass wir nicht zu viel Zeit online verbringen und die reale Welt vergessen.' },
+
+            { level: 'B1', title: '1. Die kulturelle Bedeutung der Pünktlichkeit', text: 'In Deutschland wird Pünktlichkeit als eine fundamentale Tugend im Berufs- sowie im Privatleben angesehen. Wer zu einem geschäftlichen Termin oder einer privaten Verabredung zu spät kommt, gilt schnell als unzuverlässig oder unhöflich. Diese Einstellung basiert auf dem Respekt vor der wertvollen Zeit der anderen Person. Deshalb planen die Menschen ihre Anfahrtswege stets mit ausreichend Pufferzeit ein, um unvorhergesehene Verzögerungen im Verkehr oder bei den öffentlichen Verkehrsmitteln auszugleichen.' },
+            { level: 'B1', title: '2. Warum immer mehr Menschen eine Fremdsprache lernen', text: 'Das Erlernen einer Fremdsprache wie Deutsch oder Englisch bietet heutzutage enorme Vorteile auf dem globalen Arbeitsmarkt. Es erweitert nicht nur die beruflichen Perspektiven und ermöglicht den Zugang zu internationalen Unternehmen, sondern verändert auch grundlegend die eigene Sichtweise auf die Welt. Man lernt, andere Kulturen besser zu verstehen und Empathie für Menschen mit völlig unterschiedlichen Hintergründen zu entwickeln. Obwohl dieser Lernprozess viel Disziplin und kontinuierliches Training erfordert, ist der persönliche Gewinn unbezahlbar.' },
+            { level: 'B1', title: '3. Vor- und Nachteile des Online-Lernens', text: 'Die Digitalisierung hat den Bildungssektor revolutioniert. Online-Kurse und digitale Lernplattformen ermöglichen es Schülern und Berufstätigen, unabhängig von Ort und Zeit Wissen zu erwerben. Man spart wertvolle Zeit und Geld für den täglichen Weg zur Schule oder Universität. Auf der anderen Seite erfordert das eigenständige Lernen zu Hause ein hohes Maß an Selbstdisziplin und Motivation. Ohne den direkten persönlichen Kontakt zu Lehrern und Mitschülern kann es manchmal schwierig sein, am Ball zu bleiben und schwierige Themen zu vertiefen.' },
+            { level: 'B1', title: '4. Die Rolle des Sports in einer gesunden Gesellschaft', text: 'Regelmäßige körperliche Aktivität ist ein entscheidender Faktor für ein gesundes und ausgeglichenes Leben. Sport hilft nicht nur dabei, das körperliche Gewicht zu kontrollieren und das Herz-Kreislauf-System zu stärken, sondern baut auch effektiv Stress ab. Nach einem anstrengenden Arbeitstag gibt es kaum etwas Besseres, als im Fitnessstudio zu trainieren oder im Park eine Runde zu laufen. Darüber hinaus fördert der Mannschaftssport den sozialen Zusammenhalt und den Teamgeist in der Gemeinschaft.' },
+
+            { level: 'B2', title: '1. Die Metamorphose der modernen Arbeitswelt', text: 'Die fortschreitende Digitalisierung und die Etablierung flexibler Arbeitsmodelle wie das Homeoffice haben den traditionellen Büroalltag grundlegend transformiert. Einerseits bietet diese ortsunabhängige Flexibilität den Angestellten eine signifikant verbesserte Work-Life-Balance, da lange Pendelzeiten entfallen. Andererseits birgt diese Entwicklung die Gefahr, dass die strikten Grenzen zwischen Berufs- und Privatleben zunehmend verschwimmen. Arbeitnehmende neigen oft dazu, über ihre regulären Arbeitszeiten hinaus erreichbar zu sein, was langfristig zu mentaler Erschöpfung führen kann.' },
+            { level: 'B2', title: '2. Der Einfluss sozialer Medien auf das gesellschaftliche Miteinander', text: 'Soziale Netzwerke sind längst zu einem festen Bestandteil unseres täglichen Lebens geworden und prägen die Art und Weise, wie wir kommunizieren, Informationen konsumieren und Beziehungen pflegen. Sie verbinden Menschen über Kontinente hinweg und bieten Plattformen für gesellschaftlichen Diskurs. Dennoch dürfen die Schattenseiten nicht ignoriert werden: Die Verbreitung von Fake News, der Druck zur ständigen Selbstoptimierung und die Entstehung digitaler Echokammern gefährden oft den sachlichen Dialog und beeinträchtigen das psychische Wohlbefinden junger Menschen.' },
+            { level: 'B2', title: '3. Herausforderungen und Chancen der erneuerbaren Energien', text: 'Der globale Klimawandel zwingt Industrie und Politik dazu, drastische Maßnahmen zur Reduzierung von Treibhausgasen zu ergreifen. Der Übergang von fossilen Brennstoffen zu erneuerbaren Energien wie Wind-, Sonnen- und Wasserkraft ist ökologisch unumgänglich, stellt jedoch technische und wirtschaftliche Systeme vor enorme Herausforderungen. Die Speicherung von Energie und die Stabilität der Stromnetze erfordern kontinuierliche Innovationen. Dennoch bietet dieser Sektor riesige Potenziale für zukunftsfähige Arbeitsplätze und eine nachhaltige Sicherung unseres Planeten.' },
+            { level: 'B2', title: '4. Die Bedeutung lebenslangen Lernens im 21. Jahrhundert', text: 'In einer sich rasant verändernden Welt, die stark von technologischem Fortschritt und künstlicher Intelligenz geprägt ist, reicht die in der Ausbildung oder im Studium erworbene Qualifikation schon lange nicht mehr für das gesamte Berufsleben aus. Lebenslanges Lernen ist zur unverzichtbaren Notwendigkeit geworden, um auf dem Arbeitsmarkt konkurrenzfähig zu bleiben. Wer bereit ist, sich kontinuierlich weiterzubilden, neue Kompetenzen zu erwerben und sich flexibel an veränderte Rahmenbedingungen anzupassen, sichert sich langfristig beruflichen Erfolg.' },
+
+            { level: 'C1', title: '1. Künstliche Intelligenz und die Zukunft des Bildungssystems', text: 'Die Integration von Systemen der künstlichen Intelligenz in den akademischen und schulischen Sektor provoziert einen tiefgreifenden Paradigmenwechsel. Adaptive Lernumgebungen versprechen eine passgenaue Individualisierung des Unterrichts, indem sie kognitive Defizite in Echtzeit analysieren und maßgeschneiderte Lehrmodule generieren. Kritiker argumentieren jedoch, dass der algorithmische Reduktionismus pädagogischer Prozesse die Empathie und die kritische Urteilskraft, die nur durch menschliche Interaktion vermittelt werden können, massiv gefährdet.' },
+            { level: 'C1', title: '2. Urbanistische Transformation und nachhaltige Mobilitätskonzepte', text: 'Metropolen weltweit stehen vor der dringlichen Imperative, ihre verkehrstechnischen Infrastrukturen fundamental umzustrukturieren, um den ökologischen Kollaps zu verhindern. Die Verlagerung hin zu einem multimodalen Verkehrssystem – bestehend aus intelligent vernetztem öffentlichem Nahverkehr, emissionsfreien Flotten und fahrradzentrierten Zonen – erfordert nicht nur gigantische finanzielle Investitionen, sondern auch einen soziokulturellen Wandel im individuellen Mobilitätsverhalten der Bevölkerung, das jahrzehntelang vom Auto dominiert wurde.' },
+            { level: 'C1', title: '3. Ökonomische Implikationen der demografischen Alterung', text: 'Die demografische Alterung der Industrienationen stellt die Sozialsysteme und die wirtschaftliche Stabilität vor beispiellose Belastungsproben. Ein sinkendes Verhältnis von Erwerbstätigen zu Rentnern gefährdet die Finanzierbarkeit der Renten- und Gesundheitssysteme. Um diesen Strukturwandel abzufedern, fordern Ökonomen eine Erhöhung des gesetzlichen Renteneintrittsalters, eine gezielte qualifizierte Zuwanderung von Fachkräften sowie eine drastische Steigerung der Produktivität durch technologische Innovationen.' },
+            { level: 'C1', title: '4. Die Globalisierung und der Erhalt kultureller Diversität', text: 'Die fortschreitende Globalisierung begünstigt einerseits den weltweiten Austausch von Ideen, Waren und Technologien, führt andererseits jedoch unweigerlich zu einer schleichenden Homogenisierung kultureller Ausdrucksformen. Lokale Traditionen und Minderheitensprachen geraten zunehmend unter den Druck einer globalisierten Massenkultur, die stark von westlichen Standards dominiert wird. Der bewusste Schutz und die aktive Förderung regionaler Identitäten sind daher essenziell, um den kulturellen Reichtum der Menschheit vor dem Verschwinden zu bewahren.' },
+
+            { level: 'C2', title: '1. Die Dialektik der sprachlichen Identität und Welterzeugung', text: 'Sprache fungiert nicht bloß als neutrales semiotisches Instrument zur Übertragung von Informationen, sondern konstituiert als ontologischer Rahmen unsere kognitive Wirklichkeit. Im Prozess des Spracherwerbs internalisieren wir subtile semantische Nuancen und weltanschauliche Prämissen, die tief in der historischen Genese einer Sprachgemeinschaft verankert sind. Auf dem C2-Niveau transzendiert der Lernende die rein mechanische Regelausübung und dringt in jene hermeneutischen Sphären vor, in denen Sprachgefühl und konzeptuelles Denken untrennbar verschmelzen.' },
+            { level: 'C2', title: '2. Hermeneutische Herausforderungen in der postmodernen Literatur', text: 'Die Dekonstruktion klassischer Erzählstrukturen in der modernen Literatur erfordert vom Rezipienten eine hochentwickelte interpretatorische Kompetenz. Autoren nutzen mehrschichtige Metaphorik, intertextuelle Verweise und narrative Brüche, um universelle existenzielle Konflikte zu evokieren. Diese literarische Komplexität verlangt eine analytische Schärfe, die über das lineare Dekodieren von Buchstaben hinausgeht und die soziokulturellen sowie philosophischen Implikationen des Textes in ihrer Gesamtheit durchdringt.' },
+            { level: 'C2', title: '3. Epistemologische Dimensionen des sprachlichen Relativismus', text: 'Die radikale Formulierung der Sapir-Whorf-Hypothese postuliert eine kausale Determinierung des Denkens durch die grammatikalische Struktur der jeweiligen Muttersprache. Während empirische Kognitionswissenschaften diese Thesis hinsichtlich universeller mentaler Kategorien häufig relativieren, bleibt die philosophische Frage bestehen, inwiefern spezifische lexikalische Differenzierungen unsere Wahrnehmung der Phänomenologie steuern. Diese Disziplin berührt das fundamentale Fundament der Erkenntnistheorie und der vergleichenden Philosophie.' },
+            { level: 'C2', title: '4. Die Ästhetik des Schweigens im philosophischen Diskurs', text: 'Das Phänomen des Nicht-Gesagten nimmt im philosophischen und literarischen Diskurs eine paradoxe Schlüsselposition ein. Wo die begriffliche Sprache an ihre inhärenten Grenzen stößt, fungiert das Schweigen nicht als Defizit, sondern als expressives Medium höchster Präzision. Von den späten Schriften Ludwig Wittgensteins bis hin zur modernen Ästhetik zeigt sich, dass das bewusste Aussparen von Inhalten tiefere Wahrheiten offenbaren kann als jede ausformulierte Syntax.' }
+        ];
+
+        let currentLangPair = 'de|id';
+
+        function setLangPair(pair, btn) {
+            currentLangPair = pair;
+            document.querySelectorAll('#kamus-page .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            let input = document.getElementById('customWordInput');
+            if(pair === 'de|id') {
+                input.placeholder = "Ketik kata Jerman (contoh: Haus)...";
+            } else {
+                input.placeholder = "Ketik kata Indonesia (contoh: Rumah)...";
             }
-        };
+        }
 
-        let currentActiveId = null;
-        let bookmarks = JSON.parse(localStorage.getItem('leer_bookmarks')) || [];
+        function cariKamus() {
+            let query = document.getElementById('customWordInput').value.trim();
+            let resBox = document.getElementById('kamusResult');
+            let resText = document.getElementById('resultText');
+            
+            if(!query) return;
 
-        function renderFeed(filter = 'all') {
+            resBox.style.display = 'block';
+            resText.innerHTML = "Menerjemahkan...";
+
+            fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(query)}&langpair=${currentLangPair}`)
+                .then(res => res.json())
+                .then(data => {
+                    let translation = data.responseData.translatedText;
+                    resText.innerHTML = `<b>${translation}</b>`;
+                })
+                .catch(() => {
+                    resText.innerHTML = "Gagal memuat terjemahan. Periksa koneksi internet.";
+                });
+        }
+
+        function renderList(filter = 'all') {
             let html = '';
-            for (let id in databaseArtikel) {
-                let art = databaseArtikel[id];
+            articles.forEach((art, index) => {
                 if (filter === 'all' || art.level === filter) {
                     html += `
-                        <div class="news-card" onclick="openArticle('${id}')">
-                            <div class="news-meta">
-                                <span class="badge-level">${art.level}</span>
-                                <span class="badge-time">${art.time}</span>
-                            </div>
-                            <div class="news-title">${art.title}</div>
+                        <div class="post" onclick="openDetail(${index})">
+                            <span class="badge">${art.level}</span>
+                            <h3>${art.title}</h3>
+                            <p style="color: var(--muted); font-size: 0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${art.text}</p>
                         </div>
                     `;
                 }
-            }
-            document.getElementById('feedList').innerHTML = html || '<p style="color:var(--text-muted);">Tidak ada artikel untuk level ini.</p>';
+            });
+            document.getElementById('post-container').innerHTML = html;
         }
 
-        function filterFeed(level, btn) {
+        function filterLevel(level, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            renderFeed(level);
+            renderList(level);
         }
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
-
-        function showSection(sectionId) {
-            document.querySelectorAll('.section-box').forEach(s => s.classList.remove('active'));
-            document.getElementById('articleView').classList.remove('active');
-            document.getElementById(sectionId).classList.add('active');
-            document.getElementById('backBtn').style.display = 'none';
-            document.getElementById('menuBtn').style.display = 'block';
-            if(sectionId === 'bookmarkSection') renderBookmarks();
-        }
-
-        function openArticle(id) {
-            currentActiveId = id;
-            const art = databaseArtikel[id];
-            document.getElementById('articleTitle').innerText = art.title;
+        function openDetail(index) {
+            const art = articles[index];
+            document.getElementById('detailBadge').innerText = art.level;
+            document.getElementById('detailTitle').innerText = art.title;
             
-            let contentHTML = '';
-            art.sentences.forEach(s => {
-                contentHTML += `
-                    <div class="sentence-block">
-                        <div class="de-text">${s.de}</div>
-                        <div class="id-translation">${s.id}</div>
-                    </div>
-                `;
-            });
-            document.getElementById('articleContent').innerHTML = contentHTML;
-            document.getElementById('translateToggle').checked = false;
+            let words = art.text.split(' ');
+            let interactiveHTML = words.map(w => {
+                let cleanWord = w.replace(/[.,\/\/#!$%\^&\*;:{}=\-_`~()„“"«»]/g,"");
+                return `<span class="clickable-word" onclick="translateWord('${cleanWord}')">${w}</span>`;
+            }).join(' ');
 
-            let quizHTML = '';
-            art.quiz.options.forEach((opt, idx) => {
-                quizHTML += `<div class="quiz-opt" onclick="checkQuiz(${idx}, ${art.quiz.answer})">${opt}</div>`;
-            });
-            document.getElementById('quizQuestion').innerText = art.quiz.q;
-            document.getElementById('quizOptions').innerHTML = quizHTML;
-            document.getElementById('quizFeedback').innerText = '';
+            document.getElementById('detailContent').innerHTML = interactiveHTML;
 
-            updateBookmarkIcon();
-
-            document.querySelectorAll('.section-box').forEach(s => s.classList.remove('active'));
-            document.getElementById('articleView').classList.add('active');
+            document.getElementById('listView').style.display = 'none';
+            document.getElementById('detailView').style.display = 'block';
             document.getElementById('backBtn').style.display = 'block';
             document.getElementById('menuBtn').style.display = 'none';
             window.scrollTo(0,0);
         }
 
-        function backToFeed() {
-            document.getElementById('articleView').classList.remove('active');
-            document.getElementById('feedSection').classList.add('active');
+        function closeArticle() {
+            document.getElementById('listView').style.display = 'block';
+            document.getElementById('detailView').style.display = 'none';
             document.getElementById('backBtn').style.display = 'none';
             document.getElementById('menuBtn').style.display = 'block';
         }
 
-        function toggleTranslation(checkbox) {
-            document.querySelectorAll('.id-translation').forEach(el => {
-                if (checkbox.checked) el.classList.add('show');
-                else el.classList.remove('show');
-            });
+        function translateWord(word) {
+            const popup = document.getElementById('wordPopup');
+            if(!word) return;
+            
+            popup.innerHTML = `Menerjemahkan: <b>${word}</b>...`;
+            popup.style.display = 'block';
+
+            fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=de|id`)
+                .then(res => res.json())
+                .then(data => {
+                    let translation = data.responseData.translatedText;
+                    popup.innerHTML = `🇩🇪 <b>${word}</b> = 🇮🇩 <span style="color:#38bdf8;">${translation}</span>`;
+                })
+                .catch(() => {
+                    popup.innerHTML = `🇩🇪 <b>${word}</b> (Gagal memuat)`;
+                });
+
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 4000);
         }
 
-        function checkQuiz(selected, correct) {
-            const feedback = document.getElementById('quizFeedback');
-            if (selected === correct) {
-                feedback.style.color = "#4ade80";
-                feedback.innerText = "🎉 Benar sekali! Hebat!";
-            } else {
-                feedback.style.color = "#f87171";
-                feedback.innerText = "❌ Kurang tepat, coba baca ulang kalimatnya ya.";
-            }
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
         }
 
-        function toggleBookmarkCurrent() {
-            if (!currentActiveId) return;
-            let index = bookmarks.indexOf(currentActiveId);
-            if (index > -1) {
-                bookmarks.splice(index, 1);
-            } else {
-                bookmarks.push(currentActiveId);
-            }
-            localStorage.setItem('leer_bookmarks', JSON.stringify(bookmarks));
-            updateBookmarkIcon();
-            updateBookmarkCount();
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            closeArticle();
         }
 
-        function updateBookmarkIcon() {
-            const btn = document.getElementById('bmBtn');
-            if (bookmarks.includes(currentActiveId)) {
-                btn.style.opacity = "1";
-                btn.title = "Hapus dari Favorit";
-            } else {
-                btn.style.opacity = "0.4";
-                btn.title = "Simpan ke Favorit";
-            }
-        }
-
-        function updateBookmarkCount() {
-            document.getElementById('bmCount').innerText = bookmarks.length;
-        }
-
-        function renderBookmarks() {
-            let list = document.getElementById('bookmarkList');
-            if (bookmarks.length === 0) {
-                list.innerHTML = '<p style="color: var(--text-muted);">Belum ada artikel yang disimpan.</p>';
-                return;
-            }
-            let html = '';
-            bookmarks.forEach(id => {
-                let art = databaseArtikel[id];
-                if (art) {
-                    html += `
-                        <div class="news-card" onclick="openArticle('${id}')">
-                            <div class="news-meta">
-                                <span class="badge-level">${art.level}</span>
-                                <span class="badge-time">${art.time}</span>
-                            </div>
-                            <div class="news-title">${art.title}</div>
-                        </div>
-                    `;
-                }
-            });
-            list.innerHTML = html;
-        }
-
-        renderFeed('all');
-        updateBookmarkCount();
+        renderList('all');
     </script>
 </body>
 </html>
