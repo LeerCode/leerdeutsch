@@ -28,6 +28,17 @@
         .clickable-word { cursor: pointer; border-bottom: 1px dashed #a78bfa; transition: color 0.2s; }
         .clickable-word:hover { color: #a78bfa; }
         
+        /* Toggle Switch Styling */
+        .toggle-container { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-bottom: 15px; font-size: 0.85rem; color: var(--muted); }
+        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .3s; border-radius: 22px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        .sentence-translation-box { display: none; background: #0f172a; border-left: 3px solid var(--primary); padding: 8px 12px; margin: 6px 0 12px 0; font-size: 0.95rem; color: #38bdf8; font-style: italic; border-radius: 0 8px 8px 0; }
+
         /* Popup Word & Flashcard Action */
         #wordPopup { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e293b; border: 2px solid var(--primary); padding: 20px; border-radius: 16px; z-index: 3000; box-shadow: 0 10px 25px rgba(0,0,0,0.6); text-align: center; max-width: 90%; min-width: 300px; }
         .sug-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
@@ -42,10 +53,7 @@
         .fc-meaning { font-size: 1rem; color: #cbd5e1; display: none; }
         .flashcard-item.flipped .fc-word { display: none; }
         .flashcard-item.flipped .fc-meaning { display: block; color: #4ade80; }
-        .fc-hint { font-size: 0.75rem; color: var(--muted); margin-top: 8px; }
         .fc-delete { position: absolute; top: 8px; right: 10px; background: none; border: none; color: #f43f5e; cursor: pointer; font-size: 0.9rem; }
-
-        #detailView { display: none; }
     </style>
 </head>
 <body>
@@ -69,25 +77,19 @@
         <div class="nav-link" onclick="toggleSidebar()" style="color:#f43f5e; border-bottom:none; margin-top:20px;">✕ Tutup Menu</div>
     </div>
 
-    <!-- Popup Interaktif & Suggested Translation per Kalimat -->
     <div id="wordPopup">
         <div id="popupText" style="margin-bottom: 6px; font-weight: bold;"></div>
         <div id="wordSugContainer" style="margin-bottom: 10px;"></div>
-        <div style="border-top: 1px solid #334155; padding-top: 8px; margin-top: 8px;">
-            <div style="font-size: 0.75rem; color: #a78bfa; margin-bottom: 4px;">💡 SUGGESTED TRANSLATION (SELURUH KALIMAT):</div>
-            <div id="sentenceSugText" style="font-size: 0.9rem; color: #38bdf8; font-style: italic;">Memuat terjemahan kalimat...</div>
-        </div>
-        <button id="popupSaveBtn" style="background: var(--primary); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; display: none; margin-top: 12px;" onclick="saveCurrentWordToFlashcard()">+ Simpan Kata ke Flashcard</button>
+        <button id="popupSaveBtn" style="background: var(--primary); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; display: none; margin-top: 8px;" onclick="saveCurrentWordToFlashcard()">+ Simpan Kata ke Flashcard</button>
     </div>
 
     <div class="container" style="max-width: 800px; margin: auto; padding: 20px;">
 
-        <!-- HALAMAN ARTIKEL -->
         <div id="artikel-page" class="page active">
             <div id="listView">
                 <div class="card">
                     <h2>✍️ Library Artikel Lengkap (A1-C2)</h2>
-                    <p style="color:var(--muted); margin-bottom:15px;">Pilih level kemampuan atau klik artikel untuk mulai membaca (semakin tinggi level, semakin panjang & mendalam materinya):</p>
+                    <p style="color:var(--muted); margin-bottom:15px;">Pilih level kemampuan atau klik artikel untuk mulai membaca:</p>
                     <button class="filter-btn active" onclick="filterLevel('all', this)">All</button>
                     <button class="filter-btn" onclick="filterLevel('A1', this)">A1</button>
                     <button class="filter-btn" onclick="filterLevel('A2', this)">A2</button>
@@ -96,176 +98,98 @@
                     <button class="filter-btn" onclick="filterLevel('C1', this)">C1</button>
                     <button class="filter-btn" onclick="filterLevel('C2', this)">C2</button>
                 </div>
-
                 <div class="card" id="post-container"></div>
             </div>
 
             <div id="detailView" class="card">
+                <div class="toggle-container">
+                    <span>Suggested translation</span>
+                    <label class="switch">
+                        <input type="checkbox" id="suggestedToggle" onchange="toggleSuggestedTranslation()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
                 <span class="badge" id="detailBadge"></span>
                 <h2 id="detailTitle" style="color: #38bdf8; margin: 10px 0 20px 0;"></h2>
                 <div id="detailContent" style="font-size: 1.1rem; line-height: 2.2; color: #cbd5e1;"></div>
             </div>
         </div>
 
-        <!-- HALAMAN BERITA -->
         <div id="berita-page" class="page">
             <div class="card">
                 <h2>🌐 Berita Referensi Eksternal</h2>
-                <p style="color:var(--muted); margin-bottom:15px;">Portal berita resmi Jerman:</p>
-                <a href="https://www.nachrichtenleicht.de/" target="_blank" class="link-item">📌 Nachrichtenleicht (Berita Mudah A2-B1)</a>
-                <a href="https://learngerman.dw.com/de/overview" target="_blank" class="link-item">📌 DW Learn German (Media & Audio)</a>
-                <a href="https://www.tagesschau.de/" target="_blank" class="link-item">📌 Tagesschau (Berita Utama Tingkat Mahir)</a>
+                <a href="https://www.nachrichtenleicht.de/" target="_blank" class="link-item">📌 Nachrichtenleicht</a>
+                <a href="https://learngerman.dw.com/de/overview" target="_blank" class="link-item">📌 DW Learn German</a>
+                <a href="https://www.tagesschau.de/" target="_blank" class="link-item">📌 Tagesschau</a>
             </div>
         </div>
 
-        <!-- HALAMAN AI KAMUS -->
         <div id="ai-kamus-page" class="page">
             <div class="card">
                 <h2>🤖 AI Kamus Jerman ⇄ Indonesia</h2>
-                <p style="color:var(--muted); margin-bottom:15px;">Pilih arah terjemahan cerdas di bawah ini:</p>
-                
-                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                    <button id="btnDeId" class="filter-btn active" onclick="setLangPair('de|id', this)">🇩🇪 Jerman ➔ 🇮🇩 Indonesia</button>
-                    <button id="btnIdDe" class="filter-btn" onclick="setLangPair('id|de', this)">🇮🇩 Indonesia ➔ 🇩🇪 Jerman</button>
-                </div>
-
-                <input type="text" id="aiWordInput" placeholder="Ketik kata atau kalimat..." style="width:100%; padding:14px; background:#0f172a; color:white; border:1px solid #334155; border-radius:6px; box-sizing:border-box; font-size: 1rem;" onkeypress="if(event.key === 'Enter') cariAiKamus()">
-                
-                <button onclick="cariAiKamus()" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:6px; margin-top:12px; font-weight:bold; cursor:pointer; font-size: 1rem;">Tanya AI Kamus</button>
-                
-                <div id="aiKamusResult" style="margin-top: 20px; padding: 20px; background: #0f172a; border-radius: 8px; border: 1px solid #334155; display: none; font-size: 1.1rem;">
-                    <div style="font-size: 0.85rem; color: #a78bfa; margin-bottom: 5px;">HASIL TERJEMAHAN AI:</div>
-                    <span id="aiResultText" style="color: #38bdf8; font-weight: bold;"></span>
-                </div>
+                <input type="text" id="aiWordInput" placeholder="Ketik kata..." style="width:100%; padding:14px; background:#0f172a; color:white; border:1px solid #334155; border-radius:6px; box-sizing:border-box;">
+                <button onclick="cariAiKamus()" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:6px; margin-top:12px;">Tanya AI</button>
+                <div id="aiKamusResult" style="margin-top:20px; display:none;"></div>
             </div>
         </div>
 
-        <!-- HALAMAN FLASHCARD KOSAKATA -->
         <div id="flashcard-page" class="page">
             <div class="card">
-                <h2>📚 Flashcard Kosakata Anda</h2>
-                <p style="color:var(--muted); margin-bottom:10px;">Daftar kata sulit yang Anda simpan dari bacaan. Klik kartu untuk melihat arti bahasa Indonesianya!</p>
+                <h2>📚 Flashcard Kosakata</h2>
                 <div id="flashcardContainer" class="flashcard-grid"></div>
             </div>
         </div>
 
-        <!-- HALAMAN DONASI (Rapi khusus QRIS, tanpa Saweria & Trakteer) -->
         <div id="donasi-page" class="page">
-            <div class="card" style="text-align: center; padding: 30px 20px;">
-                <h2 style="color: #38bdf8; margin-bottom: 15px;">🤝 Dukung Perkembangan LeerBroDeutsch</h2>
-                <p style="color: var(--muted); margin-bottom: 25px; line-height: 1.6;">
-                    Terima kasih banyak sudah menggunakan portal belajar ini! Jika website ini membantu perjalanan belajar bahasa Jerman Anda, Anda dapat memberikan dukungan seikhlasnya secara aman melalui QRIS di bawah ini:
-                </p>
-
-                <div style="background: #0f172a; border: 2px dashed var(--primary); padding: 20px; border-radius: 12px; display: inline-block; max-width: 280px; width: 100%;">
-                    <div style="font-size: 0.9rem; font-weight: bold; color: #a78bfa; margin-bottom: 10px;">SCAN QRIS UTAMA</div>
-                    <div style="background: white; padding: 15px; border-radius: 8px; display: flex; justify-content: center; align-items: center;">
-                        <img src="qris-donasi.png" style="width:100%; height:auto; border-radius:8px;" alt="QRIS Donasi LeerBroDeutsch">
-                    </div>
-                    <p style="font-size: 0.75rem; color: var(--muted); margin-top: 10px;">Dapat di-scan via BCA, Mandiri, GoPay, OVO, DANA, dll</p>
+            <div class="card" style="text-align: center;">
+                <h2>🤝 Dukung Perkembangan LeerBroDeutsch</h2>
+                <div style="background: white; padding: 15px; border-radius: 8px; display: inline-block;">
+                    <img src="qris-donasi.png" style="width:100%; max-width:250px;">
                 </div>
+                <p style="margin-top:20px;">Support via Saweria:</p>
+                <a href="https://saweria.co/LeerBroDeutsch" target="_blank" class="link-item" style="background:#7c3aed; color:white;">💖 Dukung via Saweria</a>
             </div>
         </div>
 
-        <!-- HALAMAN TENTANG -->
         <div id="tentang-page" class="page">
             <div class="card">
-                <h2>👤 Tentang Pembuat & Visi Misi</h2>
-                <p>Halo! Saya <strong>Leer</strong>, pembuat dari <strong>LeerBroDeutsch</strong>. Website ini dirancang khusus sebagai pusat media digital mandiri untuk mendokumentasikan proses belajar bahasa Jerman.</p>
-                <h4 style="color:#38bdf8; margin-top:20px;">🎯 Visi</h4>
-                <p><em>"Menjadi ekosistem digital terdepan yang mendefinisikan ulang cara generasi muda menguasai bahasa Jerman secara mandiri—menggabungkan kedalaman materi, estetika modern, dan teknologi untuk mencetak talenta global yang kompetitif."</em></p>
-                <h4 style="color:#38bdf8; margin-top:20px;">🚀 Misi</h4>
-                <ul style="margin-left: 20px; color: #cbd5e1; margin-top: 5px;">
-                    <li>Menyediakan kurasi 24 artikel berjenjang dengan kedalaman teks progresif dari A1 sampai C2.</li>
-                    <li>Fitur interaktif AI Kamus, klik kata, dan Flashcard kosakata.</li>
-                    <li>Membangun ekosistem belajar mandiri yang bebas gangguan iklan.</li>
-                </ul>
+                <h2>👤 Tentang</h2>
+                <p>LeerBroDeutsch - Portal belajar mandiri bahasa Jerman.</p>
             </div>
         </div>
-
     </div>
 
     <script>
         const articles = [
             { level: 'A1', title: '1. Mein täglicher Weg zur Arbeit', text: 'Ich heiße Leer und wohne in Bekasi. Jeden Morgen wache ich um fünf Uhr auf. Zuerst trinke ich ein großes Glas Wasser und mache ein bisschen Sport. Danach koche ich einen starken Kaffee und bereite mein Frühstück vor. Um sieben Uhr verlasse ich das Haus. Der Weg zur Arbeit ist nicht sehr lang, aber morgens gibt es oft viel Verkehr auf der Straße. Ich fahre mit großer Vorsicht. Um acht Uhr beginne ich mit meiner Arbeit als Logistik-Operator. Die Aufgaben sind manchmal anstrengend, aber ich lerne dabei jeden Tag etwas Neues und Nützliches für meine Zukunft kennen.' },
-            { level: 'A1', title: '2. Meine kleine Familie', text: 'Meine Familie ist nicht sehr groß, aber wir sind sehr glücklich. Meine Eltern wohnen in einer ruhigen Gegend. Mein Vater arbeitet als Mechaniker und meine Mutter kümmert sich um den Haushalt. Am Wochenende besuchen wir uns oft zusammen. Wir kochen traditionelle Gerichte, sprechen über unsere Erlebnisse der Woche und trinken gemeinsam Tee. Ich liebe diese Momente der Ruhe sehr, weil sie mir viel Kraft für die kommenden Arbeitstage geben.' },
-            { level: 'A1', title: '3. Mein Zimmer und meine Hobbys', text: 'Mein Zimmer ist einfach, aber sehr gemütlich eingerichtet. An der Wand hängt eine Weltkarte, und auf dem Tisch stehen mein Laptop sowie einige Bücher über das Lernen von Sprachen. In meiner Freizeit lese ich sehr gerne spannende Romane oder höre ruhige Musik. Manchmal jogge ich abends im Park, wenn das Wetter schön ist. Sport hilft mir dabei, den Kopf nach einem langen Arbeitstag frei zu bekommen und neue Energie zu tanken.' },
-            { level: 'A1', title: '4. Einkaufen auf dem Markt', text: 'Jeden Samstag gehe ich früh morgens auf den traditionellen Markt in meiner Nähe. Dort kaufe ich frisches Gemüse, süße Früchte und manchmal auch traditionelle Snacks. Die Verkäufer sind immer sehr freundlich und hilfsbereit. Ich versuche oft, auf Deutsch oder mit einfachen Wörtern zu kommunizieren, um meine Sprachpraxis zu verbessern. Das Einkaufen auf dem Markt macht mir viel mehr Freude als im großen Supermarkt, weil die Atmosphäre hier viel lebendiger ist.' },
-            { level: 'A2', title: '1. Meine Reise nach Jakarta', text: 'Letzten Monat habe ich beschlossen, einen Tag in Jakarta zu verbringen, um dem üblichen Alltagsstress zu entfliehen. Ich bin sehr früh am Morgen mit dem Zug gefahren, weil die Straßen auf der Autobahn zu dieser Zeit oft komplett verstopft sind. In Jakarta habe ich das historische Museum besucht und viele interessante Dinge über die Geschichte des Landes gelernt. Zum Mittagessen habe ich ein kleines, traditionelles Restaurant gefunden und dort ein sehr leckeres Gericht probiert. Am Abend war ich zwar ziemlich müde von den vielen Eindrücken, aber die Reise hat sich absolut gelohnt, weil ich neue Inspirationen gesammelt habe.' },
-            { level: 'A2', title: '2. Meine Kocherfahrung am Wochenende', text: 'Kochen ist für mich nicht nur eine alltägliche Notwendigkeit, sondern mittlerweile ein echtes Hobby geworden. Früher habe ich fast nie selbst gekocht und stattdessen oft fertiges Essen gekauft oder bestellt. Aber vor einigen Wochen habe ich angefangen, komplexe Rezepte aus dem Internet auszuprobieren. Letzten Sonntag habe ich eine traditionelle Suppe mit viel frischem Gemüse und Hühnchen gekocht. Es hat überraschend gut geschmeckt, und meine Familie war total begeistert. Nächste Woche möchte ich unbedingt versuchen, einen traditionellen deutschen Kuchen zu backen, um meine Kochkünste weiter zu verbessern.' },
-            { level: 'A2', title: '3. Pläne für den nächsten Urlaub', text: 'Ich denke schon seit mehreren Wochen intensiv über meinen nächsten Urlaub nach. Ich würde gerne für ein paar Tage ans Meer reisen, weil ich das Rauschen der Wellen und die frische Meeresbrise absolut liebe. Allerdings muss ich zuerst meinen Arbeitsplan im Betrieb genau prüfen, damit ich genügend freie Tage am Stück bekomme. Mein Hauptziel ist es, ein ruhiges Hotel abseits vom Massentourismus zu finden, wo ich fernab vom großen Stadtlärm entspannen, lange Spaziergänge am Strand machen und endlich ein dickes Buch zu Ende lesen kann.' },
-            { level: 'A2', title: '4. Die Bedeutung des Internets in unserem Leben', text: 'Das Internet hat unseren gesamten Alltag in den letzten Jahren komplett und unwiderruflich verändert. Früher mussten wir zur Post gehen, umständlich Briefe schreiben oder in Bibliotheken stundenlang nach Informationen suchen. Heute finden wir alles innerhalb von wenigen Sekunden direkt auf dem Bildschirm unseres Smartphones. Wir können mit Freunden auf der ganzen Welt chatten, online einkaufen und Filme in HD-Qualität streamen. Trotz der vielen enormen Vorteile müssen wir jedoch stets aufpassen, dass wir nicht zu viel wertvolle Zeit online verbringen und darüber die reale Welt komplett vergessen.' },
-            { level: 'B1', title: '1. Die kulturelle Bedeutung der Pünktlichkeit', text: 'In Deutschland wird Pünktlichkeit als eine fundamentale Tugend im Berufs- sowie im Privatleben angesehen und tief respektiert. Wer zu einem geschäftlichen Termin oder einer privaten Verabredung unentschuldigt zu spät kommt, gilt in der Regel schnell als unzuverlässig oder unhöflich. Diese strikte Einstellung basiert im Wesentlichen auf dem tiefen Respekt vor der wertvollen Zeit der anderen anwesenden Person. Aus diesem Grund planen die Menschen ihre täglichen Anfahrtswege stets mit ausreichend Pufferzeit ein, um unvorhergesehene Verzögerungen im Straßenverkehr oder bei den öffentlichen Verkehrsmitteln problemlos auszugleichen. Wer sich frühzeitig an diese gesellschaftliche Norm anpasst, erleichtert sich die Integration ungemein.' },
-            { level: 'B1', title: '2. Warum immer mehr Menschen eine Fremdsprache lernen', text: 'Das Erlernen einer Fremdsprache wie Deutsch oder Englisch bietet heutzutage auf dem globalen Arbeitsmarkt enorme und unverzichtbare Vorteile. Es erweitert nicht nur die persönlichen beruflichen Perspektiven und ermöglicht den Zugang zu internationalen Unternehmen, sondern verändert auch grundlegend die eigene Sichtweise auf die Welt. Man lernt durch den Austausch, andere Kulturen besser zu verstehen und echte Empathie für Menschen mit völlig unterschiedlichen Hintergründen zu entwickeln. Obwohl dieser kontinuierliche Lernprozess viel eiserne Disziplin und tägliches Training erfordert, ist der persönliche Gewinn für die eigene Zukunft absolut unbezahlbar.' },
-            { level: 'B1', title: '3. Vor- und Nachteile des Online-Lernens', text: 'Die rasante Digitalisierung hat den gesamten Bildungssektor in den letzten Jahren revolutioniert. Online-Kurse und moderne digitale Lernplattformen ermöglichen es Schülern und Berufstätigen gleichermaßen, völlig unabhängig von Ort und fester Zeit neues Wissen zu erwerben. Man spart dadurch wertvolle Zeit und Geld für den oft beschwerlichen Weg zur Schule oder Universität. Auf der anderen Seite erfordert das eigenständige Lernen zu Hause ein extrem hohes Maß an Selbstdisziplin und innerer Motivation. Ohne den direkten persönlichen Kontakt zu Lehrern und Mitschülern kann es manchmal ziemlich schwierig sein, langfristig am Ball zu bleiben und komplexe Themen tiefgehend zu verstehen.' },
-            { level: 'B1', title: '4. Die Rolle des Sports in einer gesunden Gesellschaft', text: 'Regelmäßige körperliche Aktivität ist ein absolut entscheidender Faktor für ein gesundes, langes und ausgeglichenes Leben. Sport hilft nicht nur dabei, das körperliche Gewicht optimal zu kontrollieren und das Herz-Kreislauf-System zu stärken, sondern baut auch effektiv den angestauten Stress des Tages ab. Nach einem anstrengenden Arbeitstag gibt es kaum etwas Besseres, als im Fitnessstudio intensiv zu trainieren oder im nahegelegenen Park eine Runde zu laufen. Darüber hinaus fördert vor allem der Mannschaftssport den sozialen Zusammenhalt, die Kommunikation und den echten Teamgeist innerhalb der gesamten Gemeinschaft.' },
-            { level: 'B2', title: '1. Die Metamorphose der modernen Arbeitswelt', text: 'Die fortschreitende Digitalisierung und die weltweite Etablierung flexibler Arbeitsmodelle wie das mobile Arbeiten oder das Homeoffice haben den traditionellen Büroalltag grundlegend transformiert. Einerseits bietet diese ortsunabhängige Flexibilität den Angestellten eine signifikant verbesserte Work-Life-Balance, da lange und kräftezehrende Pendelzeiten komplett entfallen. Arbeitnehmende können ihre Aufgaben oft freier einteilen, was die persönliche Zufriedenheit steigert. Andererseits birgt diese moderne Entwicklung auch die ernsthafte Gefahr, dass die strikten Grenzen zwischen dem Berufsleben und der privaten Freizeit zunehmend verschwimmen. Viele Beschäftigte neigen unbewusst dazu, auch weit über ihre regulären Arbeitszeiten hinaus digital erreichbar zu sein, was mittel- und langfristig zu chronischer mentaler Erschöpfung und Burnout führen kann.' },
-            { level: 'B2', title: '2. Der Einfluss sozialer Medien auf das gesellschaftliche Miteinander', text: 'Soziale Netzwerke sind längst zu einem festen, unersetzlichen Bestandteil unseres täglichen Lebens geworden und prägen maßgeblich die Art und Weise, wie wir kommunizieren, Nachrichten konsumieren und menschliche Beziehungen pflegen. Sie verbinden Millionen von Menschen über Kontinente hinweg und bieten niederschwellige Plattformen für gesellschaftlichen Diskurs sowie den schnellen Ideenaustausch. Dennoch dürfen die kritischen Schattenseiten dieser Technologie keineswegs ignoriert werden: Die rasant rasante Verbreitung von Fake News, der enorme gesellschaftliche Druck zur ständigen digitalen Selbstoptimierung und die Entstehung polarisierender digitaler Echokammern gefährden oft den sachlichen, konstruktiven Dialog. Dies beeinträchtigt nachweislich das psychische Wohlbefinden, insbesondere bei jüngeren Generationen, die mit diesen Medien aufwachsen.' },
-            { level: 'B2', title: '3. Herausforderungen und Chancen der erneuerbaren Energien', text: 'Der globale und unaufhaltsame Klimawandel zwingt Industrie, Wirtschaft und Politik weltweit dazu, drastische sowie nachhaltige Maßnahmen zur massiven Reduzierung von Treibhausgasen zu ergreifen. Der historische Übergang von fossilen Brennstoffen hin zu erneuerbaren Energien wie Windkraft, Solarenergie und Wasserkraft ist ökologisch absolut unumgänglich, stellt jedoch bestehende technische und wirtschaftliche Infrastrukturen vor enorme Herausforderungen. Die effiziente Speicherung von elektrischer Energie und die garantierte Stabilität der nationalen Stromnetze erfordern kontinuierliche, kostenintensive Innovationen und Forschung. Dennoch bietet dieser zukunftsweisende Sektor riesige wirtschaftliche Potenziale für grüne Arbeitsplätze und die langfristige Sicherung unseres Planeten für kommende Generationen.' },
-            { level: 'B2', title: '4. Die Bedeutung lebenslangen Lernens im 21. Jahrhundert', text: 'In einer sich rasant und unvorhersehbar verändernden Welt, die stark von technologischer Disruption und künstlicher Intelligenz geprägt ist, reicht die in der ursprünglichen Ausbildung oder im Studium erworbene Fachqualifikation schon lange nicht mehr für das gesamte Berufsleben aus. Lebenslanges Lernen hat sich daher zu einer unverzichtbaren Notwendigkeit entwickelt, um auf dem hart umkämpften Arbeitsmarkt dauerhaft konkurrenzfähig zu bleiben. Wer bereit ist, sich kontinuierlich weiterzubilden, völlig neue digitale Kompetenzen zu erwerben und sich flexibel an veränderte Rahmenbedingungen anzupassen, sichert sich langfristig seine berufliche Existenz und eröffnet sich spannende Aufstiegschancen.' },
-            { level: 'C1', title: '1. Künstliche Intelligenz und die Zukunft des Bildungssystems', text: 'Die tiefgreifende Integration von Systemen der künstlichen Intelligenz in den akademischen sowie schulischen Sektor provoziert gegenwärtig einen historischen und unvermeidbaren Paradigmenwechsel. Adaptive, KI-gestützte Lernumgebungen versprechen eine passgenaue, individuelle Individualisierung des Unterrichts, indem sie kognitive Defizite von Lernenden in Echtzeit analysieren und maßgeschneiderte Lehrmodule generieren. Kritische Stimmen in der Bildungswissenschaft argumentieren jedoch vehement, dass ein solcher algorithmischer Reduktionismus pädagogischer Prozesse die zwischenmenschliche Empathie, die Intuition und die kritische Urteilskraft, welche primär durch authentische menschliche Interaktion vermittelt werden, massiv gefährdet. Bildung darf demnach niemals auf die bloße maschinelle Effizienzsteigerung reduziert werden, sondern muss den Menschen in seiner ganzheitlichen, emotionalen Dimension begreifen.' },
-            { level: 'C1', title: '2. Urbanistische Transformation und nachhaltige Mobilitätskonzepte', text: 'Metropolen und Großstädte weltweit stehen vor der dringlichen und unaufschiebbaren Imperative, ihre verkehrstechnischen Infrastrukturen fundamental umzustrukturieren, um den drohenden ökologischen Kollaps sowie den Verkehrsinfarkt abzuwenden. Die konsequente Verlagerung hin zu einem multimodalen Verkehrssystem – bestehend aus intelligent vernetztem öffentlichem Nahverkehr, emissionsfreien Flotten und fahrradzentrierten urbanen Zonen – erfordert nicht nur gigantische finanzielle Investitionen von Staat und Privatwirtschaft, sondern bedingt vor allem einen tiefgreifenden soziokulturellen Wandel im individuellen Mobilitätsverhalten der Bevölkerung. Dieses Verhalten war über viele Jahrzehnte hinweg fast ausschliesslich durch die Vorherrschaft des privaten Automobils geprägt, was nun aufgebrochen werden muss.' },
-            { level: 'C1', title: '3. Ökonomische Implikationen der demografischen Alterung', text: 'Die fortgeschrittene demografische Alterung in den modernen Industrienationen stellt die nationalen Sozialsysteme, die öffentlichen Haushalte sowie die makroökonomische Stabilität vor beispiellose Belastungsproben. Ein kontinuierlich sinkendes Verhältnis von sozialversicherungspflichtig Erwerbstätigen zu Rentenbeziehern gefährdet akut die langfristige Finanzierbarkeit der Renten-, Pflege- und Gesundheitssysteme. Um diesen strukturellen Wandel sozialverträglich abzufedern, fordern renommierte Ökonomen weltweit eine schrittweise Erhöhung des gesetzlichen Renteneintrittsalters, eine gezielte, qualifizierte Zuwanderung ausländischer Fachkräfte zur Schließung von Lücken sowie eine drastische Steigerung der gesamtwirtschaftlichen Produktivität durch innovative technologische Automatisierung.' },
-            { level: 'C1', title: '4. Die Globalisierung und der Erhalt kultureller Diversität', text: 'Die fortschreitende Globalisierung begünstigt einerseits den weltweiten, reibungslosen Austausch von wissenschaftlichen Ideen, innovativen Waren und hochentwickelten Technologien, führt andererseits jedoch unweigerlich zu einer schleichenden Homogenisierung kultureller Ausdrucksformen und Lebensweisen. Lokale Traditionen, regionale Dialekte und gefährdete Minderheitensprachen geraten zunehmend unter den enormen ökonomischen Druck einer globalisierten Massenkultur, die stark von westlichen Standards und digitaler Medienmacht dominiert wird. Der bewusste Schutz, die Dokumentation und die aktive Förderung regionaler kultureller Identitäten sind daher von essenzieller Bedeutung, um den unschätzbaren kulturellen Reichtum der Menschheit vor dem unwiederbringlichen Verschversinden zu bewahren.' },
-            { level: 'C2', title: '1. Die Dialektik der sprachlichen Identität und Welterzeugung', text: 'Sprache fungiert in ihrer tiefsten epistemologischen Dimension keineswegs bloß als ein neutrales, austauschbares semiotisches Instrument zur reinen Übertragung von Fakten und Informationen, sondern konstituiert als ontologischer und begrifflicher Rahmen unsere gesamte kognitive Wirklichkeit. Im unbewussten Prozess des Spracherwerbs internalisieren wir subtile semantische Nuancen, stilistische Prämissen und weltanschauliche Raster, die tief in der historischen Genese und dem kollektiven Gedächtnis einer Sprachgemeinschaft verankert sind. Auf dem fortgeschrittenen C2-Niveau transzendiert der souveräne Lernende die rein mechanische Regelausübung der Grammatik und dringt tief in jene hermeneutischen Sphären vor, in denen authentisches Sprachgefühl, idiomatische Subtilität und konzeptuelles Denken eine untrennbare, schöpferische Verschmelzung eingehen.' },
-            { level: 'C2', title: '2. Hermeneutische Herausforderungen in der postmodernen Literatur', text: 'Die radikale Dekonstruktion klassischer, linearer Erzählstrukturen in der modernen und postmodernen Literatur fordert vom Rezipienten eine hochentwickelte, analytische interpretatorische Kompetenz. Zeitgenössische Autoren nutzen bewusst mehrschichtige Metaphorik, komplexe intertextuelle Verweise und fragmentarische narrative Brüche, um universelle, existenzielle Konflikte der menschlichen Kondition zu evokieren. Diese literarische Komplexität verlangt eine intellektuelle Schärfe, die weit über das bloße, oberflächliche Dekodieren von Buchstaben hinausgeht und stattdessen die soziokulturellen, psychologischen sowie philosophischen Implikationen des geschriebenen Textes in ihrer universellen Gesamtheit durchdringt und kritisch reflektiert.' },
-            { level: 'C2', title: '3. Epistemologische Dimensionen des sprachlichen Relativismus', text: 'Die radikale Formulierung der Sapir-Whorf-Hypothese postuliert eine tiefgreifende, kausale Determinierung unseres Denkens und unserer Wahrnehmung durch die spezifische grammatikalische und lexikalische Struktur der jeweiligen Muttersprache. Während empirische Kognitionswissenschaften diese gewagte Thesis hinsichtlich universeller neurobiologischer mentaler Kategorien häufig relativieren, bleibt die philosophische Kernfrage bestehen, inwiefern spezifische sprachliche Differenzierungen unsere subjektive Wahrnehmung der Phänomenologie steuern. Diese anspruchsvolle Disziplin berührt das fundamentale Fundament der Erkenntnistheorie, der Sprachphilosophie und der vergleichenden Anthropologie, indem sie den Horizont unseres Denkens an die Grenzen unserer artikulierbaren Sprache bindet.' },
-            { level: 'C2', title: '4. Die Ästhetik des Schweigens im philosophischen Diskurs', text: 'Das komplexe Phänomen des Nicht-Gesagten nimmt im philosophischen, ästhetischen und literarischen Diskurs eine paradoxe, jedoch hochgradig wirkmächtige Schlüsselposition ein. Dort, wo die begriffliche, diskursive Sprache an ihre inhärenten logischen Grenzen stößt, fungiert das bewusste Schweigen keineswegs als defizitärer Mangel an Ausdrucksmitteln, sondern entfaltet sich as ein expressives Medium von höchster semantischer Präzision. Von den späten sprachanalytischen Schriften Ludwig Wittgensteins bis hin zur modernen Phänomenologie zeigt sich immer wieder, dass das präzise Aussparen von Inhalten tiefere, metaphysische Wahrheiten offenbaren kann als jede noch so ausformulierte, dogmatische Syntax.' }
+            { level: 'C2', title: '1. Die Dialektik der sprachlichen Identität', text: 'Sprache fungiert in ihrer tiefsten epistemologischen Dimension keineswegs bloß als ein neutrales, austauschbares semiotisches Instrument zur reinen Übertragung von Fakten und Informationen, sondern konstituiert als ontologischer und begrifflicher Rahmen unsere gesamte kognitive Wirklichkeit. Im unbewussten Prozess des Spracherwerbs internalisieren wir subtile semantische Nuancen, stilistische Prämissen und weltanschauliche Raster, die tief in der historischen Genese und dem kollektiven Gedächtnis einer Sprachgemeinschaft verankert sind.' }
         ];
 
         let currentLangPair = 'de|id';
         let flashcards = JSON.parse(localStorage.getItem('leerbro_flashcards')) || [];
         let activeWordData = { de: '', id: '' };
 
-        function setLangPair(pair, btn) {
-            currentLangPair = pair;
-            document.querySelectorAll('#ai-kamus-page .filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            let input = document.getElementById('aiWordInput');
-            if(pair === 'de|id') {
-                input.placeholder = "Ketik kata Jerman (contoh: Entwicklung)...";
-            } else {
-                input.placeholder = "Ketik kata Indonesia (contoh: Perkembangan)...";
-            }
-        }
-
         function cariAiKamus() {
             let query = document.getElementById('aiWordInput').value.trim();
             let resBox = document.getElementById('aiKamusResult');
-            let resText = document.getElementById('aiResultText');
             if(!query) return;
             resBox.style.display = 'block';
-            resText.innerHTML = "🤖 AI sedang menganalisis dan menerjemahkan...";
+            resBox.innerHTML = "Menganalisis...";
             fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(query)}&langpair=${currentLangPair}`)
                 .then(res => res.json())
                 .then(data => {
-                    let translation = data.responseData.translatedText;
-                    let targetLang = currentLangPair === 'de|id' ? 'Bahasa Indonesia' : 'Bahasa Jerman';
-                    resText.innerHTML = `✨ ${translation} <span style="font-size:0.8rem; color:#94a3b8; display:block; margin-top:5px;">(Terjemahan akurat ke ${targetLang})</span>`;
-                })
-                .catch(() => { resText.innerHTML = "⚠️ Gagal terhubung ke server AI."; });
+                    resBox.innerHTML = `Hasil: ${data.responseData.translatedText}`;
+                });
         }
 
         function renderList(filter = 'all') {
             let html = '';
             articles.forEach((art, index) => {
                 if (filter === 'all' || art.level === filter) {
-                    html += `
-                        <div class="post" onclick="openDetail(${index})">
-                            <span class="badge">${art.level}</span>
-                            <h3>${art.title}</h3>
-                            <p style="color: var(--muted); font-size: 0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${art.text}</p>
-                        </div>
-                    `;
+                    html += `<div class="post" onclick="openDetail(${index})"><span class="badge">${art.level}</span><h3>${art.title}</h3></div>`;
                 }
             });
             document.getElementById('post-container').innerHTML = html;
-        }
-
-        function filterLevel(level, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderList(level);
         }
 
         function openDetail(index) {
@@ -273,18 +197,40 @@
             document.getElementById('detailBadge').innerText = art.level;
             document.getElementById('detailTitle').innerText = art.title;
             
-            let words = art.text.split(' ');
-            let interactiveHTML = words.map(w => {
-                let cleanWord = w.replace(/[.,\/\/#!$%\^&\*;:{}=\-_`~()„“"«»]/g,"");
-                return `<span class="clickable-word" onclick="translateWord('${cleanWord}', event)">${w}</span>`;
-            }).join(' ');
+            document.getElementById('suggestedToggle').checked = false;
+            let sentences = art.text.match(/[^.!?]+[.!?]+(\s|$)/g) || [art.text];
+            let containerHTML = "";
+            sentences.forEach((sent, sIdx) => {
+                let trimmedSent = sent.trim();
+                let words = trimmedSent.split(' ');
+                let sentenceWordsHTML = words.map(w => `<span class="clickable-word" onclick="translateWord('${w.replace(/[.,\/\/#!$%\^&\*;:{}=\-_`~()„“"«»]/g,"")}')">${w}</span>`).join(' ');
 
-            document.getElementById('detailContent').innerHTML = interactiveHTML;
+                containerHTML += `
+                    <div class="sentence-block" style="margin-bottom: 14px;">
+                        <span class="sentence-text">${sentenceWordsHTML}</span>
+                        <div id="trans-${sIdx}" class="sentence-translation-box">Menerjemahkan kalimat...</div>
+                    </div>
+                `;
+            });
+            document.getElementById('detailContent').innerHTML = containerHTML;
             document.getElementById('listView').style.display = 'none';
             document.getElementById('detailView').style.display = 'block';
             document.getElementById('backBtn').style.display = 'block';
             document.getElementById('menuBtn').style.display = 'none';
-            window.scrollTo(0,0);
+        }
+
+        function toggleSuggestedTranslation() {
+            let isChecked = document.getElementById('suggestedToggle').checked;
+            let transBoxes = document.querySelectorAll('.sentence-translation-box');
+            transBoxes.forEach((box) => {
+                box.style.display = isChecked ? 'block' : 'none';
+                if (isChecked && (box.innerText === "Menerjemahkan kalimat...")) {
+                    let rawText = box.previousElementSibling.innerText;
+                    fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(rawText)}&langpair=de|id`)
+                        .then(res => res.json())
+                        .then(data => box.innerHTML = `💡 "${data.responseData.translatedText}"`);
+                }
+            });
         }
 
         function closeArticle() {
@@ -294,134 +240,42 @@
             document.getElementById('menuBtn').style.display = 'block';
         }
 
-        function translateWord(word, event) {
+        function translateWord(word) {
             const popup = document.getElementById('wordPopup');
-            const popupText = document.getElementById('popupText');
-            const saveBtn = document.getElementById('popupSaveBtn');
-            const wordSugContainer = document.getElementById('wordSugContainer');
-            const sentenceSugText = document.getElementById('sentenceSugText');
-            
-            if(!word) return;
-            
-            popupText.innerHTML = `🤖 Menganalisis kata: <b>${word}</b>...`;
-            wordSugContainer.innerHTML = '';
-            sentenceSugText.innerHTML = "Memuat terjemahan kalimat...";
-            saveBtn.style.display = 'none';
             popup.style.display = 'block';
-
-            // Terjemahan kata utama + pill alternatif
+            document.getElementById('popupText').innerHTML = `Menganalisis: <b>${word}</b>`;
             fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=de|id`)
                 .then(res => res.json())
                 .then(data => {
-                    let mainTranslation = data.responseData.translatedText;
-                    let matches = data.matches || [];
-                    activeWordData = { de: word, id: mainTranslation };
-                    popupText.innerHTML = `🇩🇪 <b>${word}</b> = 🇮🇩 <span style="color:#38bdf8;">${mainTranslation}</span>`;
-                    
-                    matches.slice(1, 4).forEach(m => {
-                        let pill = document.createElement('span');
-                        pill.className = 'sug-pill';
-                        pill.innerText = m.translation.replace(/<[^>]*>/g, '');
-                        pill.onclick = () => {
-                            activeWordData.id = pill.innerText;
-                            popupText.innerHTML = `🇩🇪 <b>${word}</b> = 🇮🇩 <span style="color:#38bdf8;">${pill.innerText}</span>`;
-                        };
-                        wordSugContainer.appendChild(pill);
-                    });
-                    saveBtn.style.display = 'inline-block';
-                })
-                .catch(() => { popupText.innerHTML = `Gagal memuat kata`; });
-
-            // Suggested Translation Kalimat Utuh
-            let sentence = "";
-            if (event && event.target) {
-                let parentText = event.target.closest('#detailContent').innerText;
-                let clickedOffset = parentText.indexOf(word);
-                if (clickedOffset !== -1) {
-                    let subBefore = parentText.substring(0, clickedOffset);
-                    let lastDot = Math.max(subBefore.lastIndexOf('.'), subBefore.lastIndexOf('!'), subBefore.lastIndexOf('?'));
-                    let startIdx = lastDot !== -1 ? lastDot + 1 : 0;
-
-                    let subAfter = parentText.substring(clickedOffset);
-                    let firstDot = Math.min(
-                        subAfter.indexOf('.') === -1 ? 9999 : subAfter.indexOf('.'),
-                        subAfter.indexOf('!') === -1 ? 9999 : subAfter.indexOf('!'),
-                        subAfter.indexOf('?') === -1 ? 9999 : subAfter.indexOf('?')
-                    );
-                    let endIdx = firstDot !== 9999 ? clickedOffset + firstDot + 1 : parentText.length;
-
-                    sentence = parentText.substring(startIdx, endIdx).trim();
-                }
-            }
-            if (!sentence || sentence.length < 3) {
-                sentence = word;
-            }
-
-            fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(sentence)}&langpair=de|id`)
-                .then(res => res.json())
-                .then(data => {
-                    let sentenceTranslation = data.responseData.translatedText;
-                    sentenceSugText.innerHTML = `"${sentenceTranslation}"`;
-                })
-                .catch(() => {
-                    sentenceSugText.innerHTML = `Gagal menerjemahkan kalimat.`;
+                    activeWordData = { de: word, id: data.responseData.translatedText };
+                    document.getElementById('popupText').innerHTML = `🇩🇪 ${word} = 🇮🇩 ${data.responseData.translatedText}`;
+                    document.getElementById('popupSaveBtn').style.display = 'block';
                 });
         }
 
         function saveCurrentWordToFlashcard() {
-            if(!activeWordData.de) return;
-            let exists = flashcards.some(item => item.de.toLowerCase() === activeWordData.de.toLowerCase());
-            if(!exists) {
-                flashcards.push(activeWordData);
-                localStorage.setItem('leerbro_flashcards', JSON.stringify(flashcards));
-                updateFlashcardCount();
-                alert(`Berhasil menyimpan "${activeWordData.de}" ke Flashcard!`);
-            } else {
-                alert(`Kata "${activeWordData.de}" sudah ada di Flashcard Anda.`);
-            }
+            flashcards.push(activeWordData);
+            localStorage.setItem('leerbro_flashcards', JSON.stringify(flashcards));
+            updateFlashcardCount();
             document.getElementById('wordPopup').style.display = 'none';
         }
 
-        function updateFlashcardCount() {
-            document.getElementById('fcCount').innerText = flashcards.length;
-        }
+        function updateFlashcardCount() { document.getElementById('fcCount').innerText = flashcards.length; }
 
         function renderFlashcards() {
             let container = document.getElementById('flashcardContainer');
-            if(flashcards.length === 0) {
-                container.innerHTML = '<p style="color: var(--muted); grid-column: 1/-1; text-align: center;">Belum ada kosakata di flashcard. Yuk baca artikel lalu klik kata untuk menyimpannya!</p>';
-                return;
-            }
-            let html = '';
-            flashcards.forEach((fc, index) => {
-                html += `
-                    <div class="flashcard-item" onclick="this.classList.toggle('flipped')">
-                        <button class="fc-delete" onclick="event.stopPropagation(); deleteFlashcard(${index})" title="Hapus">✕</button>
-                        <div class="fc-word">🇩🇪 ${fc.de}</div>
-                        <div class="fc-meaning">🇮🇩 ${fc.id}</div>
-                        <div class="fc-hint">Klik untuk membalik</div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
+            container.innerHTML = flashcards.map((fc, i) => `<div class="flashcard-item" onclick="this.classList.toggle('flipped')"><button class="fc-delete" onclick="event.stopPropagation(); deleteFlashcard(${i})">✕</button><div class="fc-word">🇩🇪 ${fc.de}</div><div class="fc-meaning">🇮🇩 ${fc.id}</div></div>`).join('');
         }
 
-        function deleteFlashcard(index) {
-            flashcards.splice(index, 1);
+        function deleteFlashcard(i) {
+            flashcards.splice(i, 1);
             localStorage.setItem('leerbro_flashcards', JSON.stringify(flashcards));
             updateFlashcardCount();
             renderFlashcards();
         }
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-        }
-
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            closeArticle();
-        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+        function showPage(pId) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(pId).classList.add('active'); toggleSidebar(); }
 
         renderList('all');
         updateFlashcardCount();
